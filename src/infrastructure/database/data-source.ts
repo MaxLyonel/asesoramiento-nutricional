@@ -13,7 +13,7 @@ export const dataSource: DataSourceOptions = {
   password: DbEnvs.dbPass,
   migrations: ["dist/infrastructure/database/migrations/*.js"],
   entities: ["dist/**/*.entity{.ts,.js}"],
-  synchronize: true,
+  synchronize: false,
   applicationName: 'nutritional-advice',
-  migrationsTableName: 'migraciones'
+  migrationsTableName: 'migraciones',
 }
