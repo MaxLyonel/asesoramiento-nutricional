@@ -14,24 +14,24 @@ export class PatienRepositoryImpl implements PatientRepository {
 
   async save(patient: Patient): Promise<void> {
     const pat = PatientEntity.fromDomain(patient)
-    console.log(patient.evaluations)
     const newPatient = await this.patientRepository.save(pat)
-    console.log(newPatient)
     if(!newPatient)  throw new Error("No se pudo crear al paciente")
   }
 
   async findById(patientId: number): Promise<any> {
     const patient = await this.patientRepository.findOne({
-      where: {
-        id: patientId
-      }
-    })
-    if(!patient) throw new Error(`No se encontrol al paciente con id ${patientId}`)
-    return patient
+      where: { id: patientId },
+      relations: ['evaluations', 'diagnosis'],
+    });
+
+    if (!patient) throw new Error(`No se encontró al paciente con id ${patientId}`);
+    return patient;
   }
 
   async findAll(): Promise<any> {
-    const patients = await this.patientRepository.find()
+    const patients = await this.patientRepository.find({
+      relations: ['evaluations', 'diagnosis'],
+    })
     return patients
   }
 

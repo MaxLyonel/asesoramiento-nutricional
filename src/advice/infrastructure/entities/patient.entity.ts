@@ -42,7 +42,7 @@ export class PatientEntity {
 
   // --- toDomain ---
   static toDomain(entity: PatientEntity): Patient {
-    return new Patient(
+    const patient = new Patient(
       entity.id,
       entity.fullName,
       entity.lastName,
@@ -51,6 +51,19 @@ export class PatientEntity {
       new CellPhone(entity.cellPhone),
       new Location(entity.latitude, entity.longitude)
     );
+
+    // Diagnóstico (si existe)
+    if (entity.diagnosis) {
+      patient.setInitialDiagnosis(DiagnosisEntity.toDomain(entity.diagnosis));
+    }
+
+    // Evaluaciones (si existen)
+    if (entity.evaluations && entity.evaluations.length > 0) {
+      const evaluations = entity.evaluations.map(e => EvaluationEntity.toDomain(e));
+      patient.setEvaluations(evaluations);
+    }
+
+    return patient;
   }
 
   // --- fromDomain ---

@@ -48,4 +48,8 @@ export class Patient {
   }
 
   getEvaluations(): Evaluation[] { return [...this.evaluations]; }
+
+  setEvaluations(evaluations: Evaluation[]) {
+    this.evaluations = evaluations;
+  }
 }
