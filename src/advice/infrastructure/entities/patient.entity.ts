@@ -6,6 +6,7 @@ import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn
 import { Patient } from 'src/advice/domain/entities/patient.entity';
 import { DiagnosisEntity } from './diagnosis.entity';
 import { EvaluationEntity } from './evaluation.entity';
+import { PatientAssignmentEntity } from './assigned.entity';
 
 @Entity({ name: 'paciente'})
 export class PatientEntity {
@@ -39,6 +40,9 @@ export class PatientEntity {
 
   @OneToMany(() => EvaluationEntity, evalEntity => evalEntity.patient, { cascade: true })
   evaluations: EvaluationEntity[]
+
+  @OneToMany(() => PatientAssignmentEntity, (assignment) => assignment.patient)
+  assignments: PatientAssignmentEntity[];
 
   // --- toDomain ---
   static toDomain(entity: PatientEntity): Patient {

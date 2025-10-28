@@ -10,6 +10,10 @@ import { AddEvaluationPatientHandler } from "./application/commands/add-evaluati
 import { CqrsModule } from "@nestjs/cqrs";
 import { GetAllPatientsHandler } from "./application/queries/get-all-patients.handler";
 import { GetPatientByIdHandler } from "./application/queries/get-patient-by-id.handler";
+import { NutritionistRepositoryImpl } from "./infrastructure/repositories/nutritionist.repository.impl";
+import { NutritionistEntity } from "./infrastructure/entities/nutritionist.entity";
+import { PatientAssignmentRepositoryImpl } from "./infrastructure/repositories/patient-assignment.repository.impl";
+import { PatientAssignmentEntity } from "./infrastructure/entities/assigned.entity";
 
 const CommandHandlers = [
   CreatePatientWithDiagnosisHandler,
@@ -26,7 +30,9 @@ const QueryHandlers = [
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([
-      PatientEntity
+      PatientEntity,
+      NutritionistEntity,
+      PatientAssignmentEntity
     ]),
   ],
   providers: [
@@ -37,6 +43,14 @@ const QueryHandlers = [
     {
       provide: 'PatientRepository',
       useClass: PatienRepositoryImpl
+    },
+    {
+      provide: 'NutritionistRepository',
+      useClass: NutritionistRepositoryImpl
+    },
+    {
+      provide: 'PatientAssignmentRepository',
+      useClass: PatientAssignmentRepositoryImpl
     }
   ]
 })
