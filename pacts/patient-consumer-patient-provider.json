@@ -1,0 +1,115 @@
+{
+  "consumer": {
+    "name": "patient-consumer"
+  },
+  "interactions": [
+    {
+      "description": "una petición GET para obtener paciente por id",
+      "providerState": "existe paciente con id 1",
+      "request": {
+        "method": "GET",
+        "path": "/patient/1"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "fullName": "Juan Perez",
+            "id": 1
+          },
+          "message": "Paciente obtenido exitosamente",
+          "status": "success"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.fullName": {
+            "match": "type"
+          },
+          "$.body.message": {
+            "match": "type"
+          },
+          "$.body.status": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "una petición POST para crear paciente",
+      "providerState": "provider acepta creación de paciente",
+      "request": {
+        "body": {
+          "bodyComposition": {
+            "fat": 20
+          },
+          "cellPhone": "0999999999",
+          "diagnosisId": 1,
+          "fullName": "Juan Perez",
+          "gender": "M",
+          "height": 175,
+          "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a",
+          "identityCard": "12345678",
+          "lastName": "Perez",
+          "location": "Quito",
+          "weight": 70
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/patient/create"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "fullName": "Juan Perez",
+            "id": "ce118b6e-d8e1-11e7-9296-cec278b6b50a"
+          },
+          "message": "Registro exitoso",
+          "status": "success"
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.fullName": {
+            "match": "type"
+          },
+          "$.body.data.id": {
+            "match": "regex",
+            "regex": "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "$.body.message": {
+            "match": "type"
+          },
+          "$.body.status": {
+            "match": "type"
+          }
+        },
+        "status": 201
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "11.0.2"
+    },
+    "pactRust": {
+      "ffi": "0.4.0",
+      "models": "1.0.4"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "patient-provider"
+  }
+}
