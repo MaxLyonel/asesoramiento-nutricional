@@ -11,13 +11,13 @@ export class Patient {
   public evaluations: Evaluation[] = [];
 
   constructor(
-    private readonly id: number,
-    private readonly fullName: string,
-    private readonly lastName: string,
-    private readonly gender: Gender,
-    private readonly identityCard: IdentityCard,
-    private readonly cellPhone: CellPhone,
-    private readonly location: Location
+    public readonly id: number,
+    public readonly fullName: string,
+    public readonly lastName: string,
+    public readonly gender: Gender,
+    public readonly identityCard: IdentityCard,
+    public readonly cellPhone: CellPhone,
+    public readonly location: Location
   ) {}
 
   // R1: No duplicar paciente
@@ -52,4 +52,13 @@ export class Patient {
   setEvaluations(evaluations: Evaluation[]) {
     this.evaluations = evaluations;
   }
+
+  getFullName(): string { return this.fullName; }
+  getLastName(): string { return this.lastName; }
+  getGender(): Gender { return this.gender; }
+  getIdentityCard(): IdentityCard { return this.identityCard; }
+  getCellPhone(): CellPhone { return this.cellPhone; }
+  getLocation(): Location { return this.location; }
+  getId(): number { return this.id; }
+  getInitialDiagnosis(): Diagnosis | undefined { return this.diagnosis; }
 }

@@ -7,7 +7,7 @@ import { Repository } from "typeorm";
 
 
 @Injectable()
-export class PatienRepositoryImpl implements PatientRepository {
+export class PatientRepositoryImpl implements PatientRepository {
   constructor(
     @InjectRepository(PatientEntity) private readonly patientRepository: Repository<PatientEntity>
   ) {}
