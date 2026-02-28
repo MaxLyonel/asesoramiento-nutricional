@@ -25,7 +25,7 @@ export class DiagnosisEntity {
 
   static toDomain(entity: DiagnosisEntity): Diagnosis {
     return new Diagnosis(
-      entity.id.toString(),                       // id como string si tu dominio lo espera así
+      // entity.id.toString(),                       // id como string si tu dominio lo espera así
       new Weight(Number(entity.weight)),          // convertir decimal a number
       new Height(Number(entity.height)),
       new BodyComposition(entity.bodyComposition)
@@ -34,7 +34,7 @@ export class DiagnosisEntity {
 
    static fromDomain(diagnosis: Diagnosis): DiagnosisEntity {
     const entity = new DiagnosisEntity();
-    entity.id = parseInt(diagnosis['id']);
+    // entity.id = parseInt(diagnosis['id']);
     entity.weight = diagnosis['weight']?.getValue() ?? 0;
     entity.height = diagnosis['height']?.getValue() ?? 0;
     entity.bodyComposition = diagnosis['bodyComposition']?.getValue() ?? '';

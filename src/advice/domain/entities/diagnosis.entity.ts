@@ -4,7 +4,7 @@ import { Weight } from "../value-objects/weight.vo";
 
 export class Diagnosis {
   constructor(
-    private readonly id: string,
+    // private readonly id: string,
     private readonly weight: Weight,
     private readonly height: Height,
     private readonly bodyComposition: BodyComposition,

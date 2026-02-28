@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { PatienRepositoryImpl } from "./infrastructure/repositories/patient.repository.impl";
+import { PatientRepositoryImpl } from "./infrastructure/repositories/patient.repository.impl";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PatientEntity } from "./infrastructure/entities/patient.entity";
 import { PatientController } from "./presentation/controllers/patient.controller";
@@ -14,6 +14,8 @@ import { NutritionistRepositoryImpl } from "./infrastructure/repositories/nutrit
 import { NutritionistEntity } from "./infrastructure/entities/nutritionist.entity";
 import { PatientAssignmentRepositoryImpl } from "./infrastructure/repositories/patient-assignment.repository.impl";
 import { PatientAssignmentEntity } from "./infrastructure/entities/assigned.entity";
+import { PatientUniquenessChecker } from "./domain/services/patient-unique.service";
+import { PatientRepository } from "./domain/repositories/patient.repository";
 
 const CommandHandlers = [
   CreatePatientWithDiagnosisHandler,
@@ -38,11 +40,18 @@ const QueryHandlers = [
   providers: [
     ...CommandHandlers,
     ...QueryHandlers,
+    {
+      provide: PatientUniquenessChecker,
+      useFactory: (repo: PatientRepository) => {
+        return new PatientUniquenessChecker(repo);
+      },
+      inject: ['PatientRepository'],
+    },
     // CreatePatientWithDiagnosis,
     // AddEvaluationUseCase,
     {
       provide: 'PatientRepository',
-      useClass: PatienRepositoryImpl
+      useClass: PatientRepositoryImpl
     },
     {
       provide: 'NutritionistRepository',

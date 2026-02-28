@@ -17,18 +17,18 @@ export class CreatePatientWithDiagnosis {
     private readonly patientRepo: PatientRepository) {}
 
   async execute(
-    id: number, fullName: string, lastName:string,
+    fullName: string, lastName:string,
     gender: 'M' | 'F',
     identityCard: string,
     cellPhone: string,
     location: { latitude: number, longitude: number },
-    diagnosisId: string,
+    // diagnosisId: string,
     weight: number,
     height: number,
     bodyComposition: string
   ): Promise<Patient> {
-    const patient = new Patient(id, fullName, lastName, new Gender(gender), new IdentityCard(identityCard), new CellPhone(cellPhone), new Location(location.latitude, location.longitude));
-    const diag = new Diagnosis(diagnosisId, new Weight(weight), new Height(height), new BodyComposition(bodyComposition));
+    const diag = new Diagnosis(new Weight(weight), new Height(height), new BodyComposition(bodyComposition));
+    const patient = new Patient(fullName, lastName, new Gender(gender), new IdentityCard(identityCard), new CellPhone(cellPhone), new Location(location.latitude, location.longitude));
     patient.setInitialDiagnosis(diag)
 
     this.patientRepo.save(patient)

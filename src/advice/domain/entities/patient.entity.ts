@@ -11,7 +11,7 @@ export class Patient {
   public evaluations: Evaluation[] = [];
 
   constructor(
-    public readonly id: number,
+    // public readonly id: number,
     public readonly fullName: string,
     public readonly lastName: string,
     public readonly gender: Gender,
@@ -59,6 +59,6 @@ export class Patient {
   getIdentityCard(): IdentityCard { return this.identityCard; }
   getCellPhone(): CellPhone { return this.cellPhone; }
   getLocation(): Location { return this.location; }
-  getId(): number { return this.id; }
+  // getId(): number { return this.id; }
   getInitialDiagnosis(): Diagnosis | undefined { return this.diagnosis; }
 }

@@ -35,4 +35,13 @@ export class PatientRepositoryImpl implements PatientRepository {
     return patients
   }
 
+  async findByIdentityCard(identityCard: any): Promise<any> {
+    console.log("Buscando paciente con cédula:", identityCard);
+    const patient = await this.patientRepository.findOne({
+      where: { identityCard: identityCard.number },
+    });
+
+    return patient;
+  }
+
 }

@@ -37,24 +37,23 @@ export class PatientController {
 
   @Post('create')
   async createPatientWithDiagnosis(@Body() body: any) {
-    try {
-      const { id, fullName, lastName, gender, identityCard, cellPhone, location, diagnosisId, weight, height, bodyComposition } = body
-      return {
-        status: 'success',
-        message: 'Registro exitoso',
-        data: this.commandBus.execute(
-        new CreatePatientWithDiagnosisCommand (
-          id, fullName, lastName, gender,
-          identityCard, cellPhone, location,
-          diagnosisId, weight, height, bodyComposition
-          )
+
+    const { fullName, lastName, gender, identityCard,
+      cellPhone, location, diagnosisId, weight,
+      height, bodyComposition } = body
+
+    const result = await this.commandBus.execute(
+      new CreatePatientWithDiagnosisCommand (
+        fullName, lastName, gender,
+        identityCard, cellPhone, location,
+        diagnosisId, weight, height, bodyComposition
         )
-      }
-    } catch(error) {
-      throw new HttpException({
-        status: 'error',
-        message: error.message || 'Error al crear un paciente'
-      }, HttpStatus.BAD_REQUEST)
+      );
+
+    return {
+      status: 'success',
+      message: 'Registro exitoso',
+      data: result
     }
   }
 

@@ -47,7 +47,7 @@ export class PatientEntity {
   // --- toDomain ---
   static toDomain(entity: PatientEntity): Patient {
     const patient = new Patient(
-      entity.id,
+      // entity.id,
       entity.fullName,
       entity.lastName,
       new Gender(entity.gender as 'M' | 'F'),
@@ -73,7 +73,7 @@ export class PatientEntity {
   // --- fromDomain ---
   static fromDomain(patient: Patient): PatientEntity {
     const entity = new PatientEntity();
-    entity.id = patient['id'];
+    // entity.id = patient['id'];
     entity.fullName = patient['fullName'];
     entity.lastName = patient['lastName'];
     entity.gender = patient['gender'].getValue();

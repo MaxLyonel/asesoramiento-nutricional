@@ -11,6 +11,7 @@ import { Weight } from 'src/advice/domain/value-objects/weight.vo';
 import { Height } from 'src/advice/domain/value-objects/height.vo';
 import { BodyComposition } from 'src/advice/domain/value-objects/body-composition.vo';
 import { Inject } from '@nestjs/common';
+import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-unique.service';
 
 @CommandHandler(CreatePatientWithDiagnosisCommand)
 export class CreatePatientWithDiagnosisHandler
@@ -18,43 +19,51 @@ export class CreatePatientWithDiagnosisHandler
 {
   constructor(
     @Inject('PatientRepository')
-    private readonly patientRepo: PatientRepository) {}
+    private readonly patientRepo: PatientRepository,
+    private readonly uniquenessChecker: PatientUniquenessChecker
+  ) {}
 
   async execute(command: CreatePatientWithDiagnosisCommand): Promise<Patient> {
     const {
-      id,
       fullName,
       lastName,
       gender,
       identityCard,
       cellPhone,
       location,
-      diagnosisId,
+      // diagnosisId,
       weight,
       height,
       bodyComposition,
     } = command;
 
-    const patient = new Patient(
-      id,
-      fullName,
-      lastName,
-      new Gender(gender),
-      new IdentityCard(identityCard),
-      new CellPhone(cellPhone),
-      new Location(location.latitude, location.longitude),
-    );
+    try {
+      await this.uniquenessChecker.ensureUnique(new IdentityCard(identityCard));
+      const patient = new Patient(
+        fullName,
+        lastName,
+        new Gender(gender),
+        new IdentityCard(identityCard),
+        new CellPhone(cellPhone),
+        new Location(location.latitude, location.longitude),
+      );
 
-    const diag = new Diagnosis(
-      diagnosisId,
-      new Weight(weight),
-      new Height(height),
-      new BodyComposition(bodyComposition),
-    );
+      const diag = new Diagnosis(
+        // diagnosisId,
+        new Weight(weight),
+        new Height(height),
+        new BodyComposition(bodyComposition),
+      );
 
-    patient.setInitialDiagnosis(diag);
+      patient.setInitialDiagnosis(diag);
 
-    await this.patientRepo.save(patient);
-    return patient;
+      await this.patientRepo.save(patient);
+      return patient;
+    } catch (error) {
+      // if (error instanceof UniqueConstraintError) {
+      //   throw new PatientAlreadyExistsError();
+      // }
+      throw error;
+    }
   }
 }

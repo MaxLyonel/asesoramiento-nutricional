@@ -1,6 +1,5 @@
 export class CreatePatientWithDiagnosisCommand {
   constructor(
-    public readonly id: number,
     public readonly fullName: string,
     public readonly lastName: string,
     public readonly gender: 'M' | 'F',
