@@ -16,6 +16,7 @@ import { PatientAssignmentRepositoryImpl } from "./infrastructure/repositories/p
 import { PatientAssignmentEntity } from "./infrastructure/entities/assigned.entity";
 import { PatientUniquenessChecker } from "./domain/services/patient-unique.service";
 import { PatientRepository } from "./domain/repositories/patient.repository";
+import { ClientsModule, Transport } from "@nestjs/microservices";
 
 const CommandHandlers = [
   CreatePatientWithDiagnosisHandler,
@@ -35,6 +36,20 @@ const QueryHandlers = [
       PatientEntity,
       NutritionistEntity,
       PatientAssignmentEntity
+    ]),
+    ClientsModule.register([
+      {
+        name: 'KAFKA_SERVICE',
+        transport: Transport.KAFKA,
+        options: {
+          client: {
+            brokers: ['localhost:9092'],
+          },
+          consumer: {
+            groupId: 'nutritional-advice-consumer',
+          },
+        },
+      },
     ]),
   ],
   providers: [

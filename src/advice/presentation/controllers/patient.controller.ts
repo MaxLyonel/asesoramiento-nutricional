@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { Subscriber } from "rxjs";
 import { AddEvaluationPatientCommand } from "src/advice/application/commands/add-evaluation-patient.command";
 import { CreatePatientWithDiagnosisCommand } from "src/advice/application/commands/create-patient-width-diagnosis.command";
 import { GetAllPatientsQuery } from "src/advice/application/queries/get-all-patients.query";
@@ -36,6 +37,7 @@ export class PatientController {
   // }
 
   @Post('create')
+  // @Subscriber('patient.created')
   async createPatientWithDiagnosis(@Body() body: any) {
 
     const { fullName, lastName, gender, identityCard,
