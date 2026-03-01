@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Param, Post } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
+import { MessagePattern, Payload } from "@nestjs/microservices";
 import { Subscriber } from "rxjs";
 import { AddEvaluationPatientCommand } from "src/advice/application/commands/add-evaluation-patient.command";
 import { CreatePatientWithDiagnosisCommand } from "src/advice/application/commands/create-patient-width-diagnosis.command";
@@ -36,10 +37,9 @@ export class PatientController {
   //   }
   // }
 
-  @Post('create')
-  // @Subscriber('patient.created')
-  async createPatientWithDiagnosis(@Body() body: any) {
-
+  // @Post('create')
+  @MessagePattern('create_patient')
+  async createPatientWithDiagnosis(@Payload() body: any) {
     const { fullName, lastName, gender, identityCard,
       cellPhone, location, diagnosisId, weight,
       height, bodyComposition } = body

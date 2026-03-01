@@ -43,7 +43,7 @@ export class CreatePatientWithDiagnosisHandler
       bodyComposition,
     } = command;
 
-    try {
+    // try {
       await this.uniquenessChecker.ensureUnique(new IdentityCard(identityCard));
       const patient = new Patient(
         fullName,
@@ -70,11 +70,11 @@ export class CreatePatientWithDiagnosisHandler
         lastName: patient.lastName,
       });
       return patient;
-    } catch (error) {
-      // if (error instanceof UniqueConstraintError) {
-      //   throw new PatientAlreadyExistsError();
-      // }
-      throw error;
-    }
+    // } catch (error) {
+    //   // if (error instanceof UniqueConstraintError) {
+    //   //   throw new PatientAlreadyExistsError();
+    //   // }
+    //   throw error;
+    // }
   }
 }
