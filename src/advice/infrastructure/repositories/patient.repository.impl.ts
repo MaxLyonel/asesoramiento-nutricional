@@ -12,13 +12,14 @@ export class PatientRepositoryImpl implements PatientRepository {
     @InjectRepository(PatientEntity) private readonly patientRepository: Repository<PatientEntity>
   ) {}
 
-  async save(patient: Patient): Promise<void> {
+  async save(patient: Patient): Promise<any> {
     const pat = PatientEntity.fromDomain(patient)
     const newPatient = await this.patientRepository.save(pat)
     if(!newPatient)  throw new Error("No se pudo crear al paciente")
+    return newPatient
   }
 
-  async findById(patientId: number): Promise<any> {
+  async findById(patientId: string): Promise<any> {
     const patient = await this.patientRepository.findOne({
       where: { id: patientId },
       relations: ['evaluations', 'diagnosis'],

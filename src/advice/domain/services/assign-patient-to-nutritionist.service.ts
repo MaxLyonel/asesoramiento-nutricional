@@ -12,7 +12,7 @@ export class AssignPatientToNutritionistService {
     private nutritionistRepository: NutritionistRepository
   ) {}
 
-  execute(patientId: number, nutritionistId: number, serviceType: string) {
+  execute(patientId: string, nutritionistId: number, serviceType: string) {
     const nutritionist = this.nutritionistRepository.findById(nutritionistId);
     const patient = this.patientRepository.findById(patientId)
 

@@ -7,11 +7,12 @@ import { Patient } from 'src/advice/domain/entities/patient.entity';
 import { DiagnosisEntity } from './diagnosis.entity';
 import { EvaluationEntity } from './evaluation.entity';
 import { PatientAssignmentEntity } from './assigned.entity';
+import { UUID } from 'crypto';
 
 @Entity({ name: 'paciente'})
 export class PatientEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ name: 'nombre'})
   fullName: string;

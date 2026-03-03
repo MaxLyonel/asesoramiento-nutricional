@@ -15,7 +15,7 @@ export class AddEvaluationUseCase {
     private readonly patientRepo: PatientRepository) {}
 
   async execute(
-    patientId: number,
+    patientId: string,
     evaluationId: string,
     date: Date,
     weight: number,

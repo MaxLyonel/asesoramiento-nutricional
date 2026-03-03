@@ -25,7 +25,7 @@ if(process.env.NODE_ENV === 'test') {
     password: DbEnvs.dbPass,
     migrations: ["dist/infrastructure/database/migrations/*.js"],
     entities: ["dist/**/*.entity{.ts,.js}"],
-    synchronize: false,
+    synchronize: true,
     applicationName: 'nutritional-advice',
     migrationsTableName: 'migraciones',
   }

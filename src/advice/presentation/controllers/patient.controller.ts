@@ -44,6 +44,8 @@ export class PatientController {
       cellPhone, location, diagnosisId, weight,
       height, bodyComposition } = body
 
+      console.log("llegas?")
+
     const result = await this.commandBus.execute(
       new CreatePatientWithDiagnosisCommand (
         fullName, lastName, gender,
@@ -98,7 +100,7 @@ export class PatientController {
   @Get(':id')
   async getById(@Param('id') id: string) {
     try {
-      const result = await this.queryBus.execute(new GetPatientByIdQuery(+id));
+      const result = await this.queryBus.execute(new GetPatientByIdQuery(id));
       return {
         status: 'success',
         message: 'Paciente obtenido exitosamente',

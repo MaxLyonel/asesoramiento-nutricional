@@ -2,7 +2,7 @@
 
 export class AddEvaluationPatientCommand {
   constructor(
-    public readonly patientId: number,
+    public readonly patientId: string,
     public readonly evaluationId: string,
     public readonly date: Date,
     public readonly weight: number,

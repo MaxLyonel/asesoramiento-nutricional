@@ -37,13 +37,11 @@ export class CreatePatientWithDiagnosisHandler
       identityCard,
       cellPhone,
       location,
-      // diagnosisId,
       weight,
       height,
       bodyComposition,
     } = command;
 
-    // try {
       await this.uniquenessChecker.ensureUnique(new IdentityCard(identityCard));
       const patient = new Patient(
         fullName,
@@ -63,18 +61,14 @@ export class CreatePatientWithDiagnosisHandler
 
       patient.setInitialDiagnosis(diag);
 
-      await this.patientRepo.save(patient);
+      const newPatient = await this.patientRepo.save(patient);
+      console.log(newPatient)
       this.kafkaClient.emit('patient.created', {
-        // patientId: patient.id,                                                            
-        fullName: patient.fullName,
-        lastName: patient.lastName,
+        // patientId: patient.id,
+        event: 'PatientCreated',
+        eventDate: new Date(),
+        patient: newPatient
       });
       return patient;
-    // } catch (error) {
-    //   // if (error instanceof UniqueConstraintError) {
-    //   //   throw new PatientAlreadyExistsError();
-    //   // }
-    //   throw error;
-    // }
   }
 }

@@ -3,7 +3,7 @@ export class PatientAssignment {
 
   constructor(
     private readonly patientId: number,
-    private readonly nutritionistId: number,
+    private readonly nutritionistId: string,
     private readonly serviceType: string,
     private readonly startDate: Date
   ) {
