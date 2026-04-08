@@ -14,10 +14,14 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9092'],
+            brokers: ['kafka:9092'],
           },
           consumer: {
             groupId: 'nutritional-advice-consumer',
+            retry: {
+              retries: 10,
+              initialRetryTime: 3000,
+            }
           }
         }
       }

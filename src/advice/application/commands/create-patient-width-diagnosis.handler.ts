@@ -13,6 +13,7 @@ import { BodyComposition } from 'src/advice/domain/value-objects/body-compositio
 import { Inject, OnModuleInit } from '@nestjs/common';
 import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-unique.service';
 import { ClientKafka } from '@nestjs/microservices';
+import { OutboxService } from 'src/advice/infrastructure/services/outbox.service';
 
 @CommandHandler(CreatePatientWithDiagnosisCommand)
 export class CreatePatientWithDiagnosisHandler
@@ -22,7 +23,8 @@ export class CreatePatientWithDiagnosisHandler
     @Inject('PatientRepository')
     private readonly patientRepo: PatientRepository,
     private readonly uniquenessChecker: PatientUniquenessChecker,
-    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+    private readonly outboxService: OutboxService
   ) {}
 
   async onModuleInit() {
@@ -61,13 +63,13 @@ export class CreatePatientWithDiagnosisHandler
 
       patient.setInitialDiagnosis(diag);
 
-      const newPatient = await this.patientRepo.save(patient);
-      console.log(newPatient)
-      this.kafkaClient.emit('patient.created', {
-        // patientId: patient.id,
-        event: 'PatientCreated',
-        eventDate: new Date(),
-        patient: newPatient
+      const newPatient:any = await this.patientRepo.save(patient);
+      // ✅ En vez de emitir Kafka directamente:
+      await this.outboxService.addEvent({
+        aggregateType: 'Advice', // nombre que usa tu EventRouter
+        aggregateId: newPatient.id,
+        type: 'PatientCreated',
+        payload: newPatient
       });
       return patient;
   }

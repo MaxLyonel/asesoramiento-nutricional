@@ -17,6 +17,7 @@ import { PatientAssignmentEntity } from "./infrastructure/entities/assigned.enti
 import { PatientUniquenessChecker } from "./domain/services/patient-unique.service";
 import { PatientRepository } from "./domain/repositories/patient.repository";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { OutboxModule } from "./infrastructure/services/outbox.module";
 
 const CommandHandlers = [
   CreatePatientWithDiagnosisHandler,
@@ -32,10 +33,11 @@ const QueryHandlers = [
   controllers: [PatientController],
   imports: [
     CqrsModule,
+    OutboxModule,
     TypeOrmModule.forFeature([
       PatientEntity,
       NutritionistEntity,
-      PatientAssignmentEntity
+      PatientAssignmentEntity,
     ]),
     ClientsModule.register([
       {
@@ -43,10 +45,14 @@ const QueryHandlers = [
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9092'],
+            brokers: ['kafka:9092'],
           },
           consumer: {
             groupId: 'nutritional-advice-consumer',
+              retry: {
+              retries: 10,
+              initialRetryTime: 3000,
+            },
           },
         },
       },
