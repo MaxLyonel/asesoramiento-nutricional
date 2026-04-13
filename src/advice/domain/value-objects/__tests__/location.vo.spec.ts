@@ -8,9 +8,9 @@ describe('Location Value Object', () => {
   });
 
   it('should accept different coordinates', () => {
-    const loc = new Location(40.7128, -74.0060);
+    const loc = new Location(40.7128, -74.006);
     expect(loc.lat).toBe(40.7128);
-    expect(loc.lng).toBe(-74.0060);
+    expect(loc.lng).toBe(-74.006);
   });
 
   it('should store coordinates as numbers', () => {

@@ -5,7 +5,7 @@ export class PatientAssignment {
     private readonly patientId: number,
     private readonly nutritionistId: string,
     private readonly serviceType: string,
-    private readonly startDate: Date
+    private readonly startDate: Date,
   ) {
     this.ensureValidStartDate(startDate);
   }
@@ -21,7 +21,9 @@ export class PatientAssignment {
   // R2: Terminar una asignación (regla: no antes del inicio)
   endAssignment(date: Date) {
     if (date < this.startDate) {
-      throw new Error('La fecha de finalización no puede ser anterior al inicio.');
+      throw new Error(
+        'La fecha de finalización no puede ser anterior al inicio.',
+      );
     }
     this.endDate = date;
   }

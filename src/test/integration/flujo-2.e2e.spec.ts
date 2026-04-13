@@ -44,8 +44,8 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
   beforeEach(() => {
     // Mock repositories
     mockPatientRepo = {
-      save: jest.fn((patient) => Promise.resolve(createMockPatientEntity())),
-      findById: jest.fn((id) => Promise.resolve(createMockPatientEntity())),
+      save: jest.fn(() => Promise.resolve(createMockPatientEntity())),
+      findById: jest.fn(() => Promise.resolve(createMockPatientEntity())),
       findAll: jest.fn(() => Promise.resolve([createMockPatientEntity()])),
       findByIdentityCard: jest.fn().mockResolvedValue(null),
     };

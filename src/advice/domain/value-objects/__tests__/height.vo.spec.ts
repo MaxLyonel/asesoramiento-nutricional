@@ -7,8 +7,8 @@ describe('Height Value Object', () => {
   });
 
   it('should accept different height values', () => {
-    const height = new Height(1.80);
-    expect(height.getValue()).toBe(1.80);
+    const height = new Height(1.8);
+    expect(height.getValue()).toBe(1.8);
   });
 
   it('should store height as number', () => {

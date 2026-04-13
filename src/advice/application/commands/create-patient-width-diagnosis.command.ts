@@ -9,6 +9,6 @@ export class CreatePatientWithDiagnosisCommand {
     public readonly diagnosisId: string,
     public readonly weight: number,
     public readonly height: number,
-    public readonly bodyComposition: string
+    public readonly bodyComposition: string,
   ) {}
 }

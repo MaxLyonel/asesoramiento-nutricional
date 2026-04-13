@@ -22,7 +22,9 @@ describe('PatientAssignmentRepositoryImpl', () => {
       ],
     }).compile();
 
-    repository = module.get<PatientAssignmentRepositoryImpl>(PatientAssignmentRepositoryImpl);
+    repository = module.get<PatientAssignmentRepositoryImpl>(
+      PatientAssignmentRepositoryImpl,
+    );
   });
 
   describe('save', () => {
@@ -38,7 +40,9 @@ describe('PatientAssignmentRepositoryImpl', () => {
 
       const result = await repository.save(assignment);
 
-      expect(mockPatientAssignmentRepository.save).toHaveBeenCalledWith(assignment);
+      expect(mockPatientAssignmentRepository.save).toHaveBeenCalledWith(
+        assignment,
+      );
     });
 
     it('should throw error if save fails', async () => {
@@ -49,7 +53,9 @@ describe('PatientAssignmentRepositoryImpl', () => {
 
       mockPatientAssignmentRepository.save.mockResolvedValue(null);
 
-      await expect(repository.save(assignment)).rejects.toThrow('No se pudo crear la asignación');
+      await expect(repository.save(assignment)).rejects.toThrow(
+        'No se pudo crear la asignación',
+      );
     });
   });
 });

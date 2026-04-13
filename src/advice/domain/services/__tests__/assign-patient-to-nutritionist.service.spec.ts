@@ -9,7 +9,7 @@ describe('AssignPatientToNutritionistService', () => {
 
   beforeEach(() => {
     mockPatientAssignmentRepo = {
-      save: jest.fn().mockResolvedValue({} ),
+      save: jest.fn().mockResolvedValue({}),
     };
 
     mockPatientRepo = {
@@ -23,7 +23,7 @@ describe('AssignPatientToNutritionistService', () => {
     service = new AssignPatientToNutritionistService(
       mockPatientAssignmentRepo,
       mockPatientRepo,
-      mockNutritionistRepo
+      mockNutritionistRepo,
     );
   });
 
@@ -36,7 +36,9 @@ describe('AssignPatientToNutritionistService', () => {
       await service.execute(patientId, nutritionistId, serviceType);
 
       expect(mockPatientRepo.findById).toHaveBeenCalledWith(patientId);
-      expect(mockNutritionistRepo.findById).toHaveBeenCalledWith(nutritionistId);
+      expect(mockNutritionistRepo.findById).toHaveBeenCalledWith(
+        nutritionistId,
+      );
       expect(mockPatientAssignmentRepo.save).toHaveBeenCalled();
     });
 

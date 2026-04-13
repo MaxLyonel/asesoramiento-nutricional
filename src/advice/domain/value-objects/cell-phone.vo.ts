@@ -1,4 +1,3 @@
-
 export class CellPhone {
   constructor(private readonly number: string) {
     // if (!/^\+\d{7,15}$/.test(number)) {

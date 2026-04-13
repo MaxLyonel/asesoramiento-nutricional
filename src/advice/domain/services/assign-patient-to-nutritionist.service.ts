@@ -1,29 +1,30 @@
-import { PatientAssignment } from "../entities/patient-assignment.entity";
-import { NutritionistRepository } from "../repositories/nutrionist.repository";
-import { PatientAssignmentRepository } from "../repositories/patient-assignment.repository";
-import { PatientRepository } from "../repositories/patient.repository";
-
-
+import { PatientAssignment } from '../entities/patient-assignment.entity';
+import { NutritionistRepository } from '../repositories/nutrionist.repository';
+import { PatientAssignmentRepository } from '../repositories/patient-assignment.repository';
+import { PatientRepository } from '../repositories/patient.repository';
 
 export class AssignPatientToNutritionistService {
   constructor(
     private patientAssignmentRepository: PatientAssignmentRepository,
     private patientRepository: PatientRepository,
-    private nutritionistRepository: NutritionistRepository
+    private nutritionistRepository: NutritionistRepository,
   ) {}
 
-  execute(patientId: string, nutritionistId: number, serviceType: string) {
-    const nutritionist = this.nutritionistRepository.findById(nutritionistId);
-    const patient = this.patientRepository.findById(patientId)
-
+  async execute(
+    patientId: string,
+    nutritionistId: number,
+    serviceType: string,
+  ) {
+    await this.nutritionistRepository.findById(nutritionistId);
+    await this.patientRepository.findById(patientId);
 
     const assignment = new PatientAssignment(
       nutritionistId,
       patientId,
       serviceType,
-      new Date()
+      new Date(),
     );
 
-    this.patientAssignmentRepository.save(assignment)
+    return this.patientAssignmentRepository.save(assignment);
   }
 }

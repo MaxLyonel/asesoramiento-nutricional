@@ -1,5 +1,3 @@
-
-
 export abstract class BaseDomainError extends Error {
   public readonly code: string;
   public readonly statusCode: number;

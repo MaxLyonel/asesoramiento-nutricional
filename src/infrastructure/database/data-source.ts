@@ -1,20 +1,20 @@
-import { DataSourceOptions } from "typeorm";
-import { DbEnvs } from "../config";
-import { config } from "dotenv";
+import { DataSourceOptions } from 'typeorm';
+import { DbEnvs } from '../config';
+import { config } from 'dotenv';
 
-config()
+config();
 
 // Si estamos en ambiente de test, usamos sqlite en memoria para evitar
 // dependencias externas (postgres) durante la verificación de contratos
 let ds: DataSourceOptions;
-if(process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test') {
   ds = {
     type: 'sqlite',
     database: ':memory:',
-    entities: ["src/**/*.entity{.ts,.js}"],
+    entities: ['src/**/*.entity{.ts,.js}'],
     synchronize: true,
     logging: false,
-  }
+  };
 } else {
   ds = {
     type: 'postgres',
@@ -23,12 +23,12 @@ if(process.env.NODE_ENV === 'test') {
     database: DbEnvs.dbName,
     username: DbEnvs.dbUser,
     password: DbEnvs.dbPass,
-    migrations: ["dist/infrastructure/database/migrations/*.js"],
-    entities: ["dist/**/*.entity{.ts,.js}"],
+    migrations: ['dist/infrastructure/database/migrations/*.js'],
+    entities: ['dist/**/*.entity{.ts,.js}'],
     synchronize: true,
     applicationName: 'nutritional-advice',
     migrationsTableName: 'migraciones',
-  }
+  };
 }
 
 export const dataSource: DataSourceOptions = ds;

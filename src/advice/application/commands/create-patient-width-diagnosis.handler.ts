@@ -24,12 +24,12 @@ export class CreatePatientWithDiagnosisHandler
     private readonly patientRepo: PatientRepository,
     private readonly uniquenessChecker: PatientUniquenessChecker,
     @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
-    private readonly outboxService: OutboxService
+    private readonly outboxService: OutboxService,
   ) {}
 
   async onModuleInit() {
     await this.kafkaClient.connect();
-   }
+  }
 
   async execute(command: CreatePatientWithDiagnosisCommand): Promise<Patient> {
     const {
@@ -44,33 +44,33 @@ export class CreatePatientWithDiagnosisHandler
       bodyComposition,
     } = command;
 
-      await this.uniquenessChecker.ensureUnique(new IdentityCard(identityCard));
-      const patient = new Patient(
-        fullName,
-        lastName,
-        new Gender(gender),
-        new IdentityCard(identityCard),
-        new CellPhone(cellPhone),
-        new Location(location.latitude, location.longitude),
-      );
+    await this.uniquenessChecker.ensureUnique(new IdentityCard(identityCard));
+    const patient = new Patient(
+      fullName,
+      lastName,
+      new Gender(gender),
+      new IdentityCard(identityCard),
+      new CellPhone(cellPhone),
+      new Location(location.latitude, location.longitude),
+    );
 
-      const diag = new Diagnosis(
-        // diagnosisId,
-        new Weight(weight),
-        new Height(height),
-        new BodyComposition(bodyComposition),
-      );
+    const diag = new Diagnosis(
+      // diagnosisId,
+      new Weight(weight),
+      new Height(height),
+      new BodyComposition(bodyComposition),
+    );
 
-      patient.setInitialDiagnosis(diag);
+    patient.setInitialDiagnosis(diag);
 
-      const newPatient:any = await this.patientRepo.save(patient);
-      // ✅ En vez de emitir Kafka directamente:
-      await this.outboxService.addEvent({
-        aggregateType: 'Advice', // nombre que usa tu EventRouter
-        aggregateId: newPatient.id,
-        type: 'PatientCreated',
-        payload: newPatient
-      });
-      return patient;
+    const newPatient: any = await this.patientRepo.save(patient);
+    // ✅ En vez de emitir Kafka directamente:
+    await this.outboxService.addEvent({
+      aggregateType: 'Advice', // nombre que usa tu EventRouter
+      aggregateId: newPatient.id,
+      type: 'PatientCreated',
+      payload: newPatient,
+    });
+    return patient;
   }
 }

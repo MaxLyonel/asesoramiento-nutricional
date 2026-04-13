@@ -24,17 +24,14 @@ export class IdentityCard {
 
   // 🔹 Compara por valor (no por referencia)
   equals(other: IdentityCard): boolean {
-    return (
-      this.number === other.number &&
-      this.complement === other.complement
-    );
+    return this.number === other.number && this.complement === other.complement;
   }
 
   // 🔹 Para serialización (ej. persistencia o API)
   toPrimitives() {
     return {
       number: this.number,
-      complement: this.complement ?? null
+      complement: this.complement ?? null,
     };
   }
 }

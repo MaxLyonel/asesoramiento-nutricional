@@ -16,7 +16,7 @@ describe('Nutritionist Entity', () => {
       'Pérez',
       identityCard,
       cellPhone,
-      'Nutrición Deportiva'
+      'Nutrición Deportiva',
     );
   });
 
@@ -35,12 +35,14 @@ describe('Nutritionist Entity', () => {
         'Pérez',
         identityCard,
         cellPhone,
-        'Nutrición Deportiva'
+        'Nutrición Deportiva',
       );
 
       expect(() => {
         Nutritionist.ensureNotDuplicate(existing, duplicate);
-      }).toThrow('Nutricionista duplicado: ya existe un registro con el mismo CI.');
+      }).toThrow(
+        'Nutricionista duplicado: ya existe un registro con el mismo CI.',
+      );
     });
 
     it('should not throw error if nutritionist is unique', () => {
@@ -51,7 +53,7 @@ describe('Nutritionist Entity', () => {
         'García',
         new IdentityCard('87654321'),
         new CellPhone('+34987654321'),
-        'Nutrición Clínica'
+        'Nutrición Clínica',
       );
 
       expect(() => {
@@ -66,7 +68,7 @@ describe('Nutritionist Entity', () => {
         'Pérez',
         identityCard,
         cellPhone,
-        'Nutrición Deportiva'
+        'Nutrición Deportiva',
       );
 
       expect(() => {

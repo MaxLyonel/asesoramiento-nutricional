@@ -11,7 +11,9 @@ import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity
 import { AddEvaluationPatientCommand } from './add-evaluation-patient.command';
 
 @CommandHandler(AddEvaluationPatientCommand)
-export class AddEvaluationPatientHandler implements ICommandHandler<AddEvaluationPatientCommand> {
+export class AddEvaluationPatientHandler
+  implements ICommandHandler<AddEvaluationPatientCommand>
+{
   constructor(
     @Inject('PatientRepository')
     private readonly patientRepo: PatientRepository,

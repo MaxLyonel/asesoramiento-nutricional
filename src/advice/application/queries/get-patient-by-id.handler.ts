@@ -5,7 +5,9 @@ import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity
 import { GetPatientByIdQuery } from './get-patient-by-id.query';
 
 @QueryHandler(GetPatientByIdQuery)
-export class GetPatientByIdHandler implements IQueryHandler<GetPatientByIdQuery> {
+export class GetPatientByIdHandler
+  implements IQueryHandler<GetPatientByIdQuery>
+{
   constructor(
     @Inject('PatientRepository')
     private readonly patientRepo: PatientRepository,

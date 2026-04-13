@@ -20,7 +20,7 @@ describe('EvaluationDomainService', () => {
       new Gender('M'),
       new IdentityCard('12345678'),
       new CellPhone('0999999999'),
-      new Location(-0.2, -78.5)
+      new Location(-0.2, -78.5),
     );
   });
 
@@ -35,7 +35,7 @@ describe('EvaluationDomainService', () => {
         EvaluationDomainService.ensureNutritionistLimit(
           nutritionistId,
           date,
-          allPatients
+          allPatients,
         );
       }).not.toThrow();
     });
@@ -46,14 +46,18 @@ describe('EvaluationDomainService', () => {
       const allPatients: Patient[] = [];
 
       // agregar MAX_EVALUATIONS_PER_DAY (5) evaluaciones
-      for (let i = 0; i < EvaluationDomainService.MAX_EVALUATIONS_PER_DAY; i++) {
+      for (
+        let i = 0;
+        i < EvaluationDomainService.MAX_EVALUATIONS_PER_DAY;
+        i++
+      ) {
         const evaluation = new Evaluation(
           i.toString(),
           date,
           new Weight(70),
           new Height(1.75),
           new BodyComposition('Normal'),
-          nutritionistId
+          nutritionistId,
         );
         // Crear un nuevo paciente para cada evaluación para evitar el error de fecha duplicada
         const p = new Patient(
@@ -63,7 +67,7 @@ describe('EvaluationDomainService', () => {
           new Gender('M'),
           new IdentityCard(`1234567${i}`),
           new CellPhone('0999999999'),
-          new Location(-0.2, -78.5)
+          new Location(-0.2, -78.5),
         );
         p.addEvaluation(evaluation);
         allPatients.push(p);
@@ -74,9 +78,11 @@ describe('EvaluationDomainService', () => {
         EvaluationDomainService.ensureNutritionistLimit(
           nutritionistId,
           date,
-          allPatients
+          allPatients,
         );
-      }).toThrow(`El nutricionista ${nutritionistId} ya alcanzó el máximo de evaluaciones`);
+      }).toThrow(
+        `El nutricionista ${nutritionistId} ya alcanzó el máximo de evaluaciones`,
+      );
     });
   });
 });

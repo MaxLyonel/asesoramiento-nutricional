@@ -1,8 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity('outbox_event')
 export class OutboxEvent {
-
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

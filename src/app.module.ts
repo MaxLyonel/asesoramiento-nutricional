@@ -1,4 +1,3 @@
-import { Kafka } from './../node_modules/kafkajs/types/index.d';
 import { Module } from '@nestjs/common';
 import { AdviceModule } from './advice/advice.module';
 import { DatabaseModule } from './infrastructure/database/database.module';
@@ -21,13 +20,13 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
             retry: {
               retries: 10,
               initialRetryTime: 3000,
-            }
-          }
-        }
-      }
-    ])
+            },
+          },
+        },
+      },
+    ]),
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

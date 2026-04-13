@@ -30,7 +30,7 @@ describe('Pact with patient provider (consumer)', () => {
       diagnosisId: 1,
       weight: 70,
       height: 175,
-      bodyComposition: { fat: 20 }
+      bodyComposition: { fat: 20 },
     };
 
     await provider.addInteraction({
@@ -50,16 +50,16 @@ describe('Pact with patient provider (consumer)', () => {
           message: like('Registro exitoso'),
           data: {
             id: uuid(),
-            fullName: like('Juan Perez')
-          }
-        }
-      }
+            fullName: like('Juan Perez'),
+          },
+        },
+      },
     });
 
     const res = await fetch('http://localhost:1234/patient/create', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
     });
 
     expect(res.status).toBe(201);
@@ -86,10 +86,10 @@ describe('Pact with patient provider (consumer)', () => {
           message: like('Paciente obtenido exitosamente'),
           data: {
             id: expectedId,
-            fullName: like('Juan Perez')
-          }
-        }
-      }
+            fullName: like('Juan Perez'),
+          },
+        },
+      },
     });
 
     const res = await fetch(`http://localhost:1234/patient/${expectedId}`);

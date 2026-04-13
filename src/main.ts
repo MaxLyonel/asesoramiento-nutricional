@@ -1,4 +1,3 @@
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Transport } from '@nestjs/microservices';
@@ -13,10 +12,10 @@ async function bootstrap() {
       },
       consumer: {
         groupId: 'nutritional-advice-consumer',
-          retry: {
+        retry: {
           retries: 10,
           initialRetryTime: 3000,
-        }
+        },
       },
     },
   });

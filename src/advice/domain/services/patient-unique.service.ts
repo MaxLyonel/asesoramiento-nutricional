@@ -1,6 +1,6 @@
-import { PatientAlreadyExistsError } from "../errors/patient-already-exists.error";
-import { PatientRepository } from "../repositories/patient.repository";
-import { IdentityCard } from "../value-objects/identity-card.vo";
+import { PatientAlreadyExistsError } from '../errors/patient-already-exists.error';
+import { PatientRepository } from '../repositories/patient.repository';
+import { IdentityCard } from '../value-objects/identity-card.vo';
 
 export class PatientUniquenessChecker {
   constructor(private readonly repo: PatientRepository) {}

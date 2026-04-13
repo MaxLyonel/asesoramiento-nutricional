@@ -23,7 +23,8 @@
     "test:pact:consumer": "jest src/test/pact/consumer/patient.pact.spec.ts --runInBand",
     "test:pact:provider": "NODE_PATH=. node -r ts-node/register node_modules/.bin/jest src/test/pact/provider/patient.pact.verify.spec.ts --runInBand",
     "test:all": "jest --coverage",
-    "coverage:report": "jest --coverage --coverageReporters=html --collectCoverageFrom=\"src/**/*.ts\" --collectCoverageFrom=\"!src/**/*.spec.ts\" && open coverage/index.html"
+    "coverage:report": "jest --coverage --coverageReporters=html --collectCoverageFrom=\"src/**/*.ts\" --collectCoverageFrom=\"!src/**/*.spec.ts\" && open coverage/index.html",
+    "prepare": "husky"
   },
   "pact": {
     "dir": "./pacts"
@@ -43,6 +44,8 @@
     "typeorm": "^0.3.27"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.5.0",
+    "@commitlint/config-conventional": "^20.5.0",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.18.0",
     "@nestjs/cli": "^11.0.0",
@@ -57,6 +60,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.0",
     "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",

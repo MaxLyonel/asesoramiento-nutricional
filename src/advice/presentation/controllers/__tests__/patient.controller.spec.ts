@@ -48,7 +48,7 @@ describe('PatientController', () => {
         new Gender('M'),
         new IdentityCard('12345678'),
         new CellPhone('0999999999'),
-        new Location(-0.2, -78.5)
+        new Location(-0.2, -78.5),
       );
 
       mockCommandBus.execute.mockResolvedValue(patient);
@@ -106,7 +106,7 @@ describe('PatientController', () => {
           new Gender('M'),
           new IdentityCard('12345678'),
           new CellPhone('0999999999'),
-          new Location(-0.2, -78.5)
+          new Location(-0.2, -78.5),
         ),
       ];
 
@@ -129,7 +129,7 @@ describe('PatientController', () => {
         new Gender('M'),
         new IdentityCard('12345678'),
         new CellPhone('0999999999'),
-        new Location(-0.2, -78.5)
+        new Location(-0.2, -78.5),
       );
 
       mockQueryBus.execute.mockResolvedValue(patient);
@@ -149,7 +149,7 @@ describe('PatientController', () => {
         new Gender('M'),
         new IdentityCard('11111111'),
         new CellPhone('1111111111'),
-        new Location(-0.2, -78.5)
+        new Location(-0.2, -78.5),
       );
 
       mockQueryBus.execute.mockResolvedValue(patient);

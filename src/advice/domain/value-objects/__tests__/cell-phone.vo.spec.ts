@@ -24,7 +24,7 @@ describe('CellPhone Value Object', () => {
   it('should handle different phone formats', () => {
     const phone1 = new CellPhone('+1234567890');
     const phone2 = new CellPhone('(123) 456-7890');
-    
+
     expect(phone1.value).toBeDefined();
     expect(phone2.value).toBeDefined();
   });

@@ -1,7 +1,7 @@
 export class Location {
   constructor(
     private readonly latitude: number,
-    private readonly longitude: number
+    private readonly longitude: number,
   ) {
     if (!this.isValidCoordinate(latitude, longitude)) {
       throw new Error('Coordenadas inválidas');
@@ -14,8 +14,7 @@ export class Location {
 
   equals(other: Location): boolean {
     return (
-      this.latitude === other.latitude &&
-      this.longitude === other.longitude
+      this.latitude === other.latitude && this.longitude === other.longitude
     );
   }
 
@@ -24,10 +23,10 @@ export class Location {
   }
 
   get lat(): number {
-    return this.latitude
+    return this.latitude;
   }
 
   get lng(): number {
-    return this.longitude
+    return this.longitude;
   }
 }

@@ -34,7 +34,7 @@ describe('DiagnosisEntity toDomain and fromDomain', () => {
       const diagnosisSobrepeso = new DiagnosisEntity();
       diagnosisSobrepeso.id = 2;
       diagnosisSobrepeso.weight = 85;
-      diagnosisSobrepeso.height = 1.70;
+      diagnosisSobrepeso.height = 1.7;
       diagnosisSobrepeso.bodyComposition = 'Sobrepeso';
 
       const diagnosis = DiagnosisEntity.toDomain(diagnosisSobrepeso);

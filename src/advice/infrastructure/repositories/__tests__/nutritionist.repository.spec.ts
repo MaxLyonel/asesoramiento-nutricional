@@ -22,7 +22,9 @@ describe('NutritionistRepositoryImpl', () => {
       ],
     }).compile();
 
-    repository = module.get<NutritionistRepositoryImpl>(NutritionistRepositoryImpl);
+    repository = module.get<NutritionistRepositoryImpl>(
+      NutritionistRepositoryImpl,
+    );
   });
 
   describe('findById', () => {

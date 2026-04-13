@@ -1,5 +1,3 @@
-
-
 export class AddEvaluationPatientCommand {
   constructor(
     public readonly patientId: string,
@@ -8,6 +6,6 @@ export class AddEvaluationPatientCommand {
     public readonly weight: number,
     public readonly height: number,
     public readonly bodyComposition: string,
-    public readonly nutritionistId: number
+    public readonly nutritionistId: number,
   ) {}
 }

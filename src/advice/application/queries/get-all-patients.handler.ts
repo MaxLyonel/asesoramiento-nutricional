@@ -5,15 +5,17 @@ import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity
 import { GetAllPatientsQuery } from './get-all-patients.query';
 
 @QueryHandler(GetAllPatientsQuery)
-export class GetAllPatientsHandler implements IQueryHandler<GetAllPatientsQuery> {
+export class GetAllPatientsHandler
+  implements IQueryHandler<GetAllPatientsQuery>
+{
   constructor(
     @Inject('PatientRepository')
     private readonly patientRepo: PatientRepository,
   ) {}
 
-  async execute(_: GetAllPatientsQuery) {
+  async execute() {
     const patients = await this.patientRepo.findAll();
-    console.log("patients: ", patients)
+    console.log('patients: ', patients);
     return patients.map(PatientEntity.toDomain);
   }
 }

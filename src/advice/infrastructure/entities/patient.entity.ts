@@ -2,45 +2,53 @@ import { Gender } from '../../domain/value-objects/gender.vo';
 import { IdentityCard } from '../../domain/value-objects/identity-card.vo';
 import { CellPhone } from '../../domain/value-objects/cell-phone.vo';
 import { Location } from '../../domain/value-objects/location.vo';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Patient } from 'src/advice/domain/entities/patient.entity';
 import { DiagnosisEntity } from './diagnosis.entity';
 import { EvaluationEntity } from './evaluation.entity';
 import { PatientAssignmentEntity } from './assigned.entity';
-import { UUID } from 'crypto';
 
-@Entity({ name: 'paciente'})
+@Entity({ name: 'paciente' })
 export class PatientEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'nombre'})
+  @Column({ name: 'nombre' })
   fullName: string;
 
-  @Column({ name: 'paterno'})
+  @Column({ name: 'paterno' })
   lastName: string;
 
-  @Column({ type: 'enum', enum: ['M', 'F']})
+  @Column({ type: 'enum', enum: ['M', 'F'] })
   gender: string;
 
-  @Column({ name: 'carnet'})
+  @Column({ name: 'carnet' })
   identityCard: string;
 
-  @Column({ name: 'celular'})
+  @Column({ name: 'celular' })
   cellPhone: string;
 
-  @Column({ name: 'latitud', type: 'decimal'})
+  @Column({ name: 'latitud', type: 'decimal' })
   latitude: number;
 
-  @Column({ name: 'longitud', type: 'decimal'})
+  @Column({ name: 'longitud', type: 'decimal' })
   longitude: number;
 
-  @OneToOne(() => DiagnosisEntity, diag => diag.patient, { cascade: true })
+  @OneToOne(() => DiagnosisEntity, (diag) => diag.patient, { cascade: true })
   @JoinColumn()
   diagnosis: DiagnosisEntity;
 
-  @OneToMany(() => EvaluationEntity, evalEntity => evalEntity.patient, { cascade: true })
-  evaluations: EvaluationEntity[]
+  @OneToMany(() => EvaluationEntity, (evalEntity) => evalEntity.patient, {
+    cascade: true,
+  })
+  evaluations: EvaluationEntity[];
 
   @OneToMany(() => PatientAssignmentEntity, (assignment) => assignment.patient)
   assignments: PatientAssignmentEntity[];
@@ -54,7 +62,7 @@ export class PatientEntity {
       new Gender(entity.gender as 'M' | 'F'),
       new IdentityCard(entity.identityCard),
       new CellPhone(entity.cellPhone),
-      new Location(entity.latitude, entity.longitude)
+      new Location(entity.latitude, entity.longitude),
     );
 
     // Diagnóstico (si existe)
@@ -64,7 +72,9 @@ export class PatientEntity {
 
     // Evaluaciones (si existen)
     if (entity.evaluations && entity.evaluations.length > 0) {
-      const evaluations = entity.evaluations.map(e => EvaluationEntity.toDomain(e));
+      const evaluations = entity.evaluations.map((e) =>
+        EvaluationEntity.toDomain(e),
+      );
       patient.setEvaluations(evaluations);
     }
 
@@ -89,11 +99,10 @@ export class PatientEntity {
     }
 
     // Evaluaciones
-    entity.evaluations = patient.getEvaluations().map(ev =>
-      EvaluationEntity.fromDomain(ev)
-    );
+    entity.evaluations = patient
+      .getEvaluations()
+      .map((ev) => EvaluationEntity.fromDomain(ev));
 
     return entity;
   }
-
 }

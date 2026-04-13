@@ -5,7 +5,12 @@ describe('PatientAssignment Entity', () => {
   const pastDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
 
   beforeEach(() => {
-    patientAssignment = new PatientAssignment(1, 1, 'Nutrición General', pastDate);
+    patientAssignment = new PatientAssignment(
+      1,
+      1,
+      'Nutrición General',
+      pastDate,
+    );
   });
 
   describe('constructor', () => {

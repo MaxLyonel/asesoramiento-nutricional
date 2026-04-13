@@ -64,7 +64,10 @@ describe('GetAllPatientsHandler', () => {
       patientEntity2.latitude = -0.2;
       patientEntity2.longitude = -78.5;
 
-      mockPatientRepo.findAll.mockResolvedValue([patientEntity1, patientEntity2]);
+      mockPatientRepo.findAll.mockResolvedValue([
+        patientEntity1,
+        patientEntity2,
+      ]);
 
       const query = new GetAllPatientsQuery();
       const result = await handler.execute(query);

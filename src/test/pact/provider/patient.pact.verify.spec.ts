@@ -11,24 +11,27 @@ let appInstance: INestApplication;
 // necesarios, pero evitando la conexión a la base de datos. Proveemos
 // implementaciones mock para CommandBus/QueryBus.
 beforeAll(async () => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _verifier = Verifier;
   const moduleRef = await Test.createTestingModule({
     controllers: [PatientController],
     providers: [
       {
         provide: CommandBus,
         useValue: {
-          execute: (cmd: any) => {
+          execute: (_cmd: any) => {
             return { id: 1, fullName: 'Juan Perez' };
-          }
-        }
+          },
+        },
       },
       {
         provide: QueryBus,
         useValue: {
-          execute: (q: any) => Promise.resolve({ id: 1, fullName: 'Juan Perez' })
-        }
-      }
-    ]
+          execute: (_q: any) =>
+            Promise.resolve({ id: 1, fullName: 'Juan Perez' }),
+        },
+      },
+    ],
   }).compile();
 
   appInstance = moduleRef.createNestApplication();
@@ -42,7 +45,11 @@ afterAll(async () => {
 
 describe('Pact provider verification', () => {
   it('verifies the pact file produced by the consumer (simple check)', async () => {
-    const pactFile = path.resolve(process.cwd(), 'pacts', 'patient-consumer-patient-provider.json');
+    const pactFile = path.resolve(
+      process.cwd(),
+      'pacts',
+      'patient-consumer-patient-provider.json',
+    );
     const pact = require(pactFile);
     const base = 'http://localhost:8081';
 
@@ -57,7 +64,11 @@ describe('Pact provider verification', () => {
         res = await fetch(url);
       } else if (method === 'POST') {
         const body = interaction.request.body || {};
-        res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+        res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
       } else {
         throw new Error(`Unsupported method ${method} in pact interaction`);
       }

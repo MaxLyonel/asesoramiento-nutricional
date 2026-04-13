@@ -12,10 +12,18 @@ describe('Evaluation Entity', () => {
 
   beforeEach(() => {
     weight = new Weight(72);
-    height = new Height(1.80);
+    height = new Height(1.8);
     bodyComposition = new BodyComposition('Normal');
     date = new Date('2024-01-15');
-    evaluation = new Evaluation('eval-001', date, weight, height, bodyComposition, 1, 'Initial evaluation');
+    evaluation = new Evaluation(
+      'eval-001',
+      date,
+      weight,
+      height,
+      bodyComposition,
+      1,
+      'Initial evaluation',
+    );
   });
 
   describe('constructor', () => {
@@ -24,7 +32,14 @@ describe('Evaluation Entity', () => {
     });
 
     it('should create evaluation without observations', () => {
-      const evalWithoutObs = new Evaluation('eval-002', date, weight, height, bodyComposition, 1);
+      const evalWithoutObs = new Evaluation(
+        'eval-002',
+        date,
+        weight,
+        height,
+        bodyComposition,
+        1,
+      );
       expect(evalWithoutObs).toBeDefined();
     });
   });
@@ -79,9 +94,23 @@ describe('Evaluation Entity', () => {
     it('should create different evaluations with different dates', () => {
       const date1 = new Date('2024-01-15');
       const date2 = new Date('2024-01-20');
-      
-      const eval1 = new Evaluation('eval-001', date1, weight, height, bodyComposition, 1);
-      const eval2 = new Evaluation('eval-002', date2, weight, height, bodyComposition, 2);
+
+      const eval1 = new Evaluation(
+        'eval-001',
+        date1,
+        weight,
+        height,
+        bodyComposition,
+        1,
+      );
+      const eval2 = new Evaluation(
+        'eval-002',
+        date2,
+        weight,
+        height,
+        bodyComposition,
+        2,
+      );
 
       expect(eval1.getDate()).toEqual(date1);
       expect(eval2.getDate()).toEqual(date2);

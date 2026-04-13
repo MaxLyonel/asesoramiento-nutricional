@@ -1,14 +1,13 @@
-import 'dotenv/config'
-import * as joi from 'joi'
-
+import 'dotenv/config';
+import * as joi from 'joi';
 
 interface EnvVars {
-  PORT: number
-  DB_NAME: string
-  DB_HOST: string
-  DB_PORT: number
-  DB_USERNAME: string
-  DB_PASSWORD: string
+  PORT: number;
+  DB_NAME: string;
+  DB_HOST: string;
+  DB_PORT: number;
+  DB_USERNAME: string;
+  DB_PASSWORD: string;
 }
 
 const envsSchema = joi
@@ -20,27 +19,26 @@ const envsSchema = joi
     DB_USERNAME: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
   })
-  .unknown(true)
+  .unknown(true);
 
 const { error, value } = envsSchema.validate({
   ...process.env,
-})
+});
 
-if(error) {
-  throw new Error(`Config validation error: ${error.message}`)
+if (error) {
+  throw new Error(`Config validation error: ${error.message}`);
 }
 
-const envVars: EnvVars = value
+const envVars: EnvVars = value;
 
 export const DbEnvs = {
   dbName: envVars.DB_NAME,
   dbHost: envVars.DB_HOST,
   dbPort: envVars.DB_PORT,
   dbUser: envVars.DB_USERNAME,
-  dbPass: envVars.DB_PASSWORD
-}
-
+  dbPass: envVars.DB_PASSWORD,
+};
 
 export const ownPort = {
-  port: envVars.PORT
-}
+  port: envVars.PORT,
+};

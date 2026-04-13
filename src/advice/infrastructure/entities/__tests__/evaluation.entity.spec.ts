@@ -18,7 +18,7 @@ describe('EvaluationEntity toDomain and fromDomain', () => {
     evaluationEntity.id = 1;
     evaluationEntity.date = new Date('2024-01-15');
     evaluationEntity.weight = 72;
-    evaluationEntity.height = 1.80;
+    evaluationEntity.height = 1.8;
     evaluationEntity.bodyComposition = 'Normal';
     evaluationEntity.nutritionist = nutritionistEntity;
     evaluationEntity.observations = 'Good progress';
@@ -37,7 +37,7 @@ describe('EvaluationEntity toDomain and fromDomain', () => {
       const evaluation = EvaluationEntity.toDomain(evaluationEntity);
 
       expect((evaluation as any).weight.getValue()).toBe(72);
-      expect((evaluation as any).height.getValue()).toBe(1.80);
+      expect((evaluation as any).height.getValue()).toBe(1.8);
       expect((evaluation as any).bodyComposition.getValue()).toBe('Normal');
     });
 
@@ -56,7 +56,7 @@ describe('EvaluationEntity toDomain and fromDomain', () => {
 
       expect(convertedEntity).toBeInstanceOf(EvaluationEntity);
       expect(convertedEntity.weight).toBe(72);
-      expect(convertedEntity.height).toBe(1.80);
+      expect(convertedEntity.height).toBe(1.8);
       expect(convertedEntity.bodyComposition).toBe('Normal');
     });
   });

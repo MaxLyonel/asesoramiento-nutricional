@@ -1,21 +1,24 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { EvaluationEntity } from "./evaluation.entity";
-import { PatientAssignmentEntity } from "./assigned.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { EvaluationEntity } from './evaluation.entity';
+import { PatientAssignmentEntity } from './assigned.entity';
 
 @Entity({ name: 'nutricionista' })
 export class NutritionistEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({name: 'nombre'})
+  @Column({ name: 'nombre' })
   fullName: string;
 
-  @Column({name: 'especialidad'})
+  @Column({ name: 'especialidad' })
   specialization: string;
 
-  @OneToMany(() => EvaluationEntity, evalEntity => evalEntity.nutritionist)
+  @OneToMany(() => EvaluationEntity, (evalEntity) => evalEntity.nutritionist)
   evaluations: EvaluationEntity[];
 
-  @OneToMany(() => PatientAssignmentEntity, (assignment) => assignment.nutritionist)
+  @OneToMany(
+    () => PatientAssignmentEntity,
+    (assignment) => assignment.nutritionist,
+  )
   assignments: PatientAssignmentEntity[];
 }
