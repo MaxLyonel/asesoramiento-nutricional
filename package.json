@@ -18,7 +18,7 @@
     "test:cov": "jest --coverage --collectCoverageFrom=\"src/**/*.ts\" --collectCoverageFrom=\"!src/**/*.spec.ts\" --collectCoverageFrom=\"!src/main.ts\"",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:unit": "jest --testPathPatterns=\"__tests__|spec\" --testPathIgnore=\"integration|e2e|pact\"",
+    "test:unit": "jest --testPathPatterns=\"__tests__|spec\" --testPathIgnorePatterns=\"integration|e2e|pact\"",
     "test:integration": "jest --testPathPatterns=\"integration\" --runInBand",
     "test:pact:consumer": "jest src/test/pact/consumer/patient.pact.spec.ts --runInBand",
     "test:pact:provider": "NODE_PATH=. node -r ts-node/register node_modules/.bin/jest src/test/pact/provider/patient.pact.verify.spec.ts --runInBand",

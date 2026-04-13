@@ -34,14 +34,14 @@ describe('PatientRepositoryImpl', () => {
   });
 
   it('should save a patient', async () => {
+    const gender = new Gender('M');
     const patient = new Patient(
-      1,
       'Juan Perez',
       'Perez',
-      new Gender('M'),
+      gender,
       new IdentityCard('12345678'),
       new CellPhone('0999999999'),
-      new Location(-0.2, -78.5)
+      new Location(-0.2, -78.5),
     );
 
     await repository.save(patient);
@@ -50,11 +50,11 @@ describe('PatientRepositoryImpl', () => {
   });
 
   it('should find a patient by id', async () => {
-    const result = await repository.findById(1);
+    const result = await repository.findById('1');
 
     expect(result).toBeDefined();
     expect(mockTypeOrmRepository.findOne).toHaveBeenCalledWith({
-      where: { id: 1 },
+      where: { id: '1' },
       relations: ['evaluations', 'diagnosis'],
     });
   });

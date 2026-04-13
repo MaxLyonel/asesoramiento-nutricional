@@ -13,7 +13,12 @@ describe('Diagnosis Entity', () => {
     weight = new Weight(70);
     height = new Height(1.75);
     bodyComposition = new BodyComposition('Normal');
-    diagnosis = new Diagnosis('diag-001', weight, height, bodyComposition, 'Initial observation');
+    diagnosis = new Diagnosis(
+      weight,
+      height,
+      bodyComposition,
+      'Initial observation',
+    );
   });
 
   describe('constructor', () => {
@@ -22,7 +27,11 @@ describe('Diagnosis Entity', () => {
     });
 
     it('should create diagnosis without observations', () => {
-      const diagnosisWithoutObs = new Diagnosis('diag-002', weight, height, bodyComposition);
+      const diagnosisWithoutObs = new Diagnosis(
+        weight,
+        height,
+        bodyComposition,
+      );
       expect(diagnosisWithoutObs).toBeDefined();
     });
   });
@@ -47,10 +56,6 @@ describe('Diagnosis Entity', () => {
   });
 
   describe('getters', () => {
-    it('should have id', () => {
-      expect((diagnosis as any).id).toBe('diag-001');
-    });
-
     it('should have weight', () => {
       expect((diagnosis as any).weight).toEqual(weight);
     });

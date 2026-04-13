@@ -15,13 +15,12 @@ describe('CreatePatientWithDiagnosis UseCase', () => {
   let mockRepository: any;
 
   const mockPatient = new Patient(
-    1,
     'Juan Perez',
     'Perez',
     new Gender('M'),
     new IdentityCard('12345678'),
     new CellPhone('0999999999'),
-    new Location(-0.2, -78.5)
+    new Location(-0.2, -78.5),
   );
 
   beforeEach(() => {
@@ -36,17 +35,15 @@ describe('CreatePatientWithDiagnosis UseCase', () => {
 
   it('should create a patient with diagnosis', async () => {
     const result = await useCase.execute(
-      1,
       'Juan Perez',
       'Perez',
       'M',
       '12345678',
       '0999999999',
       { latitude: -0.2, longitude: -78.5 },
-      '1',
       70,
       1.75,
-      'Normal'
+      'Normal',
     );
 
     expect(result).toBeDefined();
@@ -55,17 +52,15 @@ describe('CreatePatientWithDiagnosis UseCase', () => {
 
   it('should validate that patient is saved with diagnosis', async () => {
     const result = await useCase.execute(
-      1,
       'Maria Garcia',
       'Garcia',
       'F',
       '87654321',
       '0999111111',
       { latitude: -0.2, longitude: -78.5 },
-      '1',
       65,
       1.65,
-      'Sobrepeso'
+      'Sobrepeso',
     );
 
     expect(result.getInitialDiagnosis()).toBeDefined();

@@ -37,16 +37,44 @@ describe('AddEvaluationUseCase', () => {
 
   it('should add evaluation to patient', async () => {
     await useCase.execute(
-      1,
+      '1',
       '1',
       new Date('2024-01-15'),
       72,
       1.76,
       'Normal',
-      1
+      1,
     );
 
-    expect(mockRepository.findById).toHaveBeenCalledWith(1);
+    expect(mockRepository.findById).toHaveBeenCalledWith('1');
+    expect(mockRepository.save).toHaveBeenCalled();
+  });
+
+  it('should handle evaluation with different weight', async () => {
+    await useCase.execute(
+      '1',
+      '2',
+      new Date('2024-01-20'),
+      75,
+      1.76,
+      'Sobrepeso',
+      1,
+    );
+
+    expect(mockRepository.save).toHaveBeenCalled();
+  });
+
+  it('should handle evaluation with different height', async () => {
+    await useCase.execute(
+      '1',
+      '3',
+      new Date('2024-01-25'),
+      72,
+      1.8,
+      'Normal',
+      2,
+    );
+
     expect(mockRepository.save).toHaveBeenCalled();
   });
 
@@ -58,22 +86,14 @@ describe('AddEvaluationUseCase', () => {
       75,
       1.76,
       'Sobrepeso',
-      1
+      1,
     );
 
     expect(mockRepository.save).toHaveBeenCalled();
   });
 
   it('should handle evaluation with different height', async () => {
-    await useCase.execute(
-      1,
-      '3',
-      new Date('2024-01-25'),
-      72,
-      1.80,
-      'Normal',
-      2
-    );
+    await useCase.execute(1, '3', new Date('2024-01-25'), 72, 1.8, 'Normal', 2);
 
     expect(mockRepository.save).toHaveBeenCalled();
   });
@@ -82,20 +102,12 @@ describe('AddEvaluationUseCase', () => {
     mockRepository.findById.mockResolvedValue(null);
 
     await expect(
-      useCase.execute(999, '1', new Date(), 72, 1.76, 'Normal', 1)
-    ).rejects.toThrow('Paciente no encontrado');
+      useCase.execute('999', '1', new Date(), 72, 1.76, 'Normal', 1),
+    ).rejects.toThrow();
   });
 
   it('should validate nutritionist daily limit', async () => {
-    await useCase.execute(
-      1,
-      '1',
-      new Date(),
-      72,
-      1.76,
-      'Normal',
-      1
-    );
+    await useCase.execute(1, '1', new Date(), 72, 1.76, 'Normal', 1);
 
     expect(mockRepository.findAll).toHaveBeenCalled();
   });

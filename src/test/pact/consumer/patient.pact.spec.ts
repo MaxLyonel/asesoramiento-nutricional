@@ -20,7 +20,7 @@ describe('Pact with patient provider (consumer)', () => {
   it('POST /patient/create - crear paciente', async () => {
     const requestBody = {
       // usar un valor concreto para la petición; los matchers se declaran en withRequest/willRespondWith
-      id: 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
+      // id: 'ce118b6e-d8e1-11e7-9296-cec278b6b50a',
       fullName: 'Juan Perez',
       lastName: 'Perez',
       gender: 'M',

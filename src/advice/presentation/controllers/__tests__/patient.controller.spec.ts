@@ -42,7 +42,7 @@ describe('PatientController', () => {
   describe('createPatientWithDiagnosis', () => {
     it('should create patient and return success response', async () => {
       const patient = new Patient(
-        1,
+        // 1,
         'Juan',
         'Perez',
         new Gender('M'),
@@ -123,7 +123,7 @@ describe('PatientController', () => {
   describe('getById', () => {
     it('should return patient by id', async () => {
       const patient = new Patient(
-        1,
+        // 1,
         'Juan',
         'Perez',
         new Gender('M'),
@@ -143,7 +143,7 @@ describe('PatientController', () => {
 
     it('should convert id string to number', async () => {
       const patient = new Patient(
-        5,
+        // 5,
         'Test',
         'User',
         new Gender('M'),

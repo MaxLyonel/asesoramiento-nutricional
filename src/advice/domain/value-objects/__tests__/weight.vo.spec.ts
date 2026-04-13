@@ -31,8 +31,8 @@ describe('Weight Value Object', () => {
     expect(weight.getValue()).toBe(72.5);
   });
 
-  it('should handle weight zero', () => {
-    const weight = new Weight(0);
-    expect(weight.getValue()).toBe(0);
+  it('should reject invalid weight values', () => {
+    expect(() => new Weight(0)).toThrow();
+    expect(() => new Weight(-1)).toThrow();
   });
 });

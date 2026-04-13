@@ -6,6 +6,7 @@ import { GetPatientByIdHandler } from 'src/advice/application/queries/get-patien
 import { GetPatientByIdQuery } from 'src/advice/application/queries/get-patient-by-id.query';
 import { PatientRepository } from 'src/advice/domain/repositories/patient.repository';
 import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity';
+import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-unique.service';
 
 /**
  * Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación
@@ -28,7 +29,7 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
 
   const createMockPatientEntity = () => {
     const entity = new PatientEntity();
-    entity.id = 1;
+    // entity.id = 1;
     entity.fullName = 'Maria Garcia';
     entity.lastName = 'Garcia';
     entity.gender = 'F';
@@ -46,19 +47,27 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
       save: jest.fn((patient) => Promise.resolve(createMockPatientEntity())),
       findById: jest.fn((id) => Promise.resolve(createMockPatientEntity())),
       findAll: jest.fn(() => Promise.resolve([createMockPatientEntity()])),
+      findByIdentityCard: jest.fn().mockResolvedValue(null),
     };
 
     patientRepository = mockPatientRepo;
 
+    const uniquenessChecker = new PatientUniquenessChecker(mockPatientRepo);
+
     // Create handlers with mocked repositories
-    createHandler = new CreatePatientWithDiagnosisHandler(patientRepository);
+    createHandler = new CreatePatientWithDiagnosisHandler(
+      patientRepository,
+      uniquenessChecker,
+      { connect: jest.fn() } as any,
+      { addEvent: jest.fn() } as any,
+    );
     addEvaluationHandler = new AddEvaluationPatientHandler(patientRepository);
     getHandler = new GetPatientByIdHandler(patientRepository);
   });
 
   it('Paso 1: Debe crear un paciente exitosamente', async () => {
     const command = new CreatePatientWithDiagnosisCommand(
-      1,
+      // 1,
       'Maria Garcia',
       'Garcia',
       'F',
@@ -68,7 +77,7 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
       '1',
       65,
       1.65,
-      'Sobrepeso'
+      'Sobrepeso',
     );
 
     const result = await createHandler.execute(command);
@@ -79,13 +88,13 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
 
   it('Paso 2: Debe añadir una evaluación al paciente creado', async () => {
     const command = new AddEvaluationPatientCommand(
-      1,
+      '1',
       '1',
       new Date(),
       64,
       1.65,
       'Sobrepeso',
-      1
+      1,
     );
 
     await addEvaluationHandler.execute(command);
@@ -95,13 +104,29 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
 
   it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
     const command = new AddEvaluationPatientCommand(
-      1,
+      '1',
       '2',
       new Date(),
       63,
       1.65,
       'Normal',
-      1
+      1,
+    );
+
+    await addEvaluationHandler.execute(command);
+
+    expect(mockPatientRepo.save).toHaveBeenCalled();
+  });
+
+  it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
+    const command = new AddEvaluationPatientCommand(
+      '1',
+      '2',
+      new Date(),
+      63,
+      1.65,
+      'Normal',
+      1,
     );
 
     await addEvaluationHandler.execute(command);
@@ -112,7 +137,7 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
   it('Paso 4: Debe recuperar el paciente con sus evaluaciones', async () => {
     // Primero crear paciente
     const createCmd = new CreatePatientWithDiagnosisCommand(
-      1,
+      // 1,
       'Maria Garcia',
       'Garcia',
       'F',
@@ -122,26 +147,26 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
       '1',
       65,
       1.65,
-      'Sobrepeso'
+      'Sobrepeso',
     );
 
     await createHandler.execute(createCmd);
 
     // Luego añadir evaluación
     const evalCmd = new AddEvaluationPatientCommand(
-      1,
+      '1',
       '1',
       new Date(),
       64,
       1.65,
       'Sobrepeso',
-      1
+      1,
     );
 
     await addEvaluationHandler.execute(evalCmd);
 
     // Finalmente recuperar paciente
-    const query = new GetPatientByIdQuery(1);
+    const query = new GetPatientByIdQuery('1');
     const result = await getHandler.execute(query);
 
     expect(result).toBeDefined();
@@ -151,7 +176,7 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
   it('Paso 5: Debe soportar múltiples evaluaciones para el mismo paciente', async () => {
     // Crear paciente
     const createCmd = new CreatePatientWithDiagnosisCommand(
-      1,
+      // 1,
       'Maria Garcia',
       'Garcia',
       'F',
@@ -161,33 +186,33 @@ describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () 
       '1',
       65,
       1.65,
-      'Sobrepeso'
+      'Sobrepeso',
     );
 
     await createHandler.execute(createCmd);
 
     // Primera evaluación
     const evalCmd1 = new AddEvaluationPatientCommand(
-      1,
+      '1',
       '1',
       new Date(),
       64,
       1.65,
       'Sobrepeso',
-      1
+      1,
     );
 
     await addEvaluationHandler.execute(evalCmd1);
 
     // Segunda evaluación
     const evalCmd2 = new AddEvaluationPatientCommand(
-      1,
+      '1',
       '2',
       new Date(),
       63,
       1.65,
       'Normal',
-      1
+      1,
     );
 
     await addEvaluationHandler.execute(evalCmd2);

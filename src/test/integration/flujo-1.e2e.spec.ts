@@ -4,14 +4,15 @@ import { GetPatientByIdHandler } from 'src/advice/application/queries/get-patien
 import { GetPatientByIdQuery } from 'src/advice/application/queries/get-patient-by-id.query';
 import { PatientRepository } from 'src/advice/domain/repositories/patient.repository';
 import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity';
+import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-unique.service';
 
 /**
  * Integration Test - Flujo 1: Crear Paciente + Obtener Paciente
- * 
+ *
  * Este flujo verifica el ciclo completo de:
  * 1. Crear un nuevo paciente con diagnóstico inicial
  * 2. Recuperar el paciente creado por su ID
- * 
+ *
  * Validaciones:
  * - El paciente se crea correctamente con todos los datos
  * - El paciente puede ser recuperado por su ID
@@ -24,7 +25,7 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
 
   const createMockPatientEntity = () => {
     const entity = new PatientEntity();
-    entity.id = 1;
+    // entity.id = 1;
     entity.fullName = 'Juan Perez';
     entity.lastName = 'Perez';
     entity.gender = 'M';
@@ -42,18 +43,26 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
       save: jest.fn((patient) => Promise.resolve(createMockPatientEntity())),
       findById: jest.fn((id) => Promise.resolve(createMockPatientEntity())),
       findAll: jest.fn(() => Promise.resolve([createMockPatientEntity()])),
+      findByIdentityCard: jest.fn().mockResolvedValue(null),
     };
 
     patientRepository = mockRepo;
 
-    // Create handlers with mocked repository
-    createHandler = new CreatePatientWithDiagnosisHandler(patientRepository);
+    const uniquenessChecker = new PatientUniquenessChecker(mockRepo);
+
+    // Create handlers with mocked repository and uniquenessChecker
+    createHandler = new CreatePatientWithDiagnosisHandler(
+      patientRepository,
+      uniquenessChecker,
+      { connect: jest.fn() } as any,
+      { addEvent: jest.fn() } as any,
+    );
     getHandler = new GetPatientByIdHandler(patientRepository);
   });
 
   it('Paso 1: Debe crear un paciente con diagnóstico inicial exitosamente', async () => {
     const command = new CreatePatientWithDiagnosisCommand(
-      1,
+      // 1,
       'Juan Perez',
       'Perez',
       'M',
@@ -63,7 +72,7 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
       '1',
       70,
       1.75,
-      'Normal'
+      'Normal',
     );
 
     const result = await createHandler.execute(command);
@@ -73,7 +82,7 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
   });
 
   it('Paso 2: Debe recuperar el paciente creado por su ID', async () => {
-    const query = new GetPatientByIdQuery(1);
+    const query = new GetPatientByIdQuery('1');
     const result = await getHandler.execute(query);
 
     expect(result).toBeDefined();
@@ -81,7 +90,7 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
   });
 
   it('Paso 3: Debe validar que los datos recuperados coinciden con los creados', async () => {
-    const query = new GetPatientByIdQuery(1);
+    const query = new GetPatientByIdQuery('1');
     const result = await getHandler.execute(query);
 
     expect(result.getFullName()).toBe('Juan Perez');
@@ -93,7 +102,7 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
   it('Paso 4: Completar el flujo: Crear + Obtener', async () => {
     // Paso 1: Crear paciente
     const command = new CreatePatientWithDiagnosisCommand(
-      1,
+      // 1,
       'Juan Perez',
       'Perez',
       'M',
@@ -103,14 +112,14 @@ describe('Integration Test - Flujo 1: Crear Paciente + Obtener Paciente', () => 
       '1',
       70,
       1.75,
-      'Normal'
+      'Normal',
     );
 
     const createResult = await createHandler.execute(command);
     expect(createResult).toBeDefined();
 
     // Paso 2: Obtener el paciente creado
-    const query = new GetPatientByIdQuery(1);
+    const query = new GetPatientByIdQuery('1');
     const getResult = await getHandler.execute(query);
 
     expect(getResult).toBeDefined();
