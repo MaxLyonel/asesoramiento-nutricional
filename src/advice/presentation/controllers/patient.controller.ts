@@ -58,6 +58,43 @@ export class PatientController {
     };
   }
 
+  @Post('create')
+  async createPatient(@Body() body: any) {
+    const {
+      fullName,
+      lastName,
+      gender,
+      identityCard,
+      cellPhone,
+      location,
+      diagnosisId,
+      weight,
+      height,
+      bodyComposition,
+    } = body;
+
+    const result = await this.commandBus.execute(
+      new CreatePatientWithDiagnosisCommand(
+        fullName,
+        lastName,
+        gender,
+        identityCard,
+        cellPhone,
+        location,
+        diagnosisId,
+        weight,
+        height,
+        bodyComposition,
+      ),
+    );
+
+    return {
+      status: 'success',
+      message: 'Registro exitoso',
+      data: result,
+    };
+  }
+
   @Post('add-evaluation')
   async addEvaluation(@Body() body: any) {
     try {
