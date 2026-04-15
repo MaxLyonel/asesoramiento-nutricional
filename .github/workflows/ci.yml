@@ -26,11 +26,8 @@ jobs:
             - name: Run ESLint
               run: npm run lint
 
-            - name: Run tests with coverage
-              run: npm run test:cov
-
-            - name: Generate HTML coverage report
-              run: npx jest --coverage --coverageReporters=html --coverageReporters=text --coverageReporters=lcov --coverageReporters=json --coverageReporters=clover --collectCoverageFrom="src/**/*.ts" --collectCoverageFrom="!src/**/*.spec.ts"
+            - name: Run tests and generate coverage
+              run: npx jest --coverage --collectCoverageFrom="src/**/*.ts" --collectCoverageFrom="!src/**/*.spec.ts" --collectCoverageFrom="!src/main.ts" --coverageReporters=html --coverageReporters=text --coverageReporters=lcov --coverageReporters=json --coverageReporters=clover
 
             - name: Upload coverage HTML report
               uses: actions/upload-artifact@v4
@@ -39,7 +36,7 @@ jobs:
                   path: coverage/lcov-report/
                   retention-days: 30
 
-            - name: Upload coverage lcov.info
+            - name: Upload lcov.info
               uses: actions/upload-artifact@v4
               with:
                   name: coverage-lcov
