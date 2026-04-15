@@ -52,5 +52,9 @@ jobs:
               uses: sonarsource/sonarcloud-github-action@v2
               with:
                   projectBaseDir: .
+                  args: >
+                      -Dsonar.organization=Asesoramiento-nutricional
+                      -Dsonar.projectKey=MaxLyonel_asesoramiento-nutricional
+                      -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
               env:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
