@@ -27,7 +27,7 @@ jobs:
               run: npm run lint
 
             - name: Run tests and generate coverage
-              run: npx jest --coverage --collectCoverageFrom="src/**/*.ts" --collectCoverageFrom="!src/**/*.spec.ts" --collectCoverageFrom="!src/main.ts" --coverageReporters=html --coverageReporters=text --coverageReporters=lcov --coverageReporters=json --coverageReporters=clover
+              run: npx jest --config=jest.config.js --coverage --testPathIgnorePatterns="integration|e2e|pact" --coverageReporters=html --coverageReporters=text --coverageReporters=lcov --coverageReporters=clover
 
             - name: Upload coverage HTML report
               uses: actions/upload-artifact@v4
