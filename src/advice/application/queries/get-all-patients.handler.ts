@@ -6,16 +6,16 @@ import { GetAllPatientsQuery } from './get-all-patients.query';
 
 @QueryHandler(GetAllPatientsQuery)
 export class GetAllPatientsHandler
-  implements IQueryHandler<GetAllPatientsQuery>
+	implements IQueryHandler<GetAllPatientsQuery>
 {
-  constructor(
-    @Inject('PatientRepository')
-    private readonly patientRepo: PatientRepository,
-  ) {}
+	constructor(
+		@Inject('PatientRepository')
+		private readonly patientRepo: PatientRepository,
+	) {}
 
-  async execute() {
-    const patients = await this.patientRepo.findAll();
-    console.log('patients: ', patients);
-    return patients.map(PatientEntity.toDomain);
-  }
+	async execute() {
+		const patients = await this.patientRepo.findAll();
+		console.log('patients: ', patients);
+		return patients.map(PatientEntity.toDomain);
+	}
 }

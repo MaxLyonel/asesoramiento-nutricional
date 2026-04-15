@@ -20,65 +20,65 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { OutboxModule } from './infrastructure/services/outbox.module';
 
 const CommandHandlers = [
-  CreatePatientWithDiagnosisHandler,
-  AddEvaluationPatientHandler,
+	CreatePatientWithDiagnosisHandler,
+	AddEvaluationPatientHandler,
 ];
 
 const QueryHandlers = [GetAllPatientsHandler, GetPatientByIdHandler];
 
 @Module({
-  controllers: [PatientController],
-  imports: [
-    CqrsModule,
-    OutboxModule,
-    TypeOrmModule.forFeature([
-      PatientEntity,
-      NutritionistEntity,
-      PatientAssignmentEntity,
-    ]),
-    ClientsModule.register([
-      {
-        name: 'KAFKA_SERVICE',
-        transport: Transport.KAFKA,
-        options: {
-          client: {
-            brokers: ['kafka:9092'],
-          },
-          consumer: {
-            groupId: 'nutritional-advice-consumer',
-            retry: {
-              retries: 10,
-              initialRetryTime: 3000,
-            },
-          },
-        },
-      },
-    ]),
-  ],
-  providers: [
-    ...CommandHandlers,
-    ...QueryHandlers,
-    {
-      provide: PatientUniquenessChecker,
-      useFactory: (repo: PatientRepository) => {
-        return new PatientUniquenessChecker(repo);
-      },
-      inject: ['PatientRepository'],
-    },
-    // CreatePatientWithDiagnosis,
-    // AddEvaluationUseCase,
-    {
-      provide: 'PatientRepository',
-      useClass: PatientRepositoryImpl,
-    },
-    {
-      provide: 'NutritionistRepository',
-      useClass: NutritionistRepositoryImpl,
-    },
-    {
-      provide: 'PatientAssignmentRepository',
-      useClass: PatientAssignmentRepositoryImpl,
-    },
-  ],
+	controllers: [PatientController],
+	imports: [
+		CqrsModule,
+		OutboxModule,
+		TypeOrmModule.forFeature([
+			PatientEntity,
+			NutritionistEntity,
+			PatientAssignmentEntity,
+		]),
+		ClientsModule.register([
+			{
+				name: 'KAFKA_SERVICE',
+				transport: Transport.KAFKA,
+				options: {
+					client: {
+						brokers: ['kafka:9092'],
+					},
+					consumer: {
+						groupId: 'nutritional-advice-consumer',
+						retry: {
+							retries: 10,
+							initialRetryTime: 3000,
+						},
+					},
+				},
+			},
+		]),
+	],
+	providers: [
+		...CommandHandlers,
+		...QueryHandlers,
+		{
+			provide: PatientUniquenessChecker,
+			useFactory: (repo: PatientRepository) => {
+				return new PatientUniquenessChecker(repo);
+			},
+			inject: ['PatientRepository'],
+		},
+		// CreatePatientWithDiagnosis,
+		// AddEvaluationUseCase,
+		{
+			provide: 'PatientRepository',
+			useClass: PatientRepositoryImpl,
+		},
+		{
+			provide: 'NutritionistRepository',
+			useClass: NutritionistRepositoryImpl,
+		},
+		{
+			provide: 'PatientAssignmentRepository',
+			useClass: PatientAssignmentRepositoryImpl,
+		},
+	],
 })
 export class AdviceModule {}

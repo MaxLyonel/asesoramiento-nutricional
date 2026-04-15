@@ -4,21 +4,21 @@ import { PatientAssignmentEntity } from './assigned.entity';
 
 @Entity({ name: 'nutricionista' })
 export class NutritionistEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+	@PrimaryGeneratedColumn()
+	id: number;
 
-  @Column({ name: 'nombre' })
-  fullName: string;
+	@Column({ name: 'nombre' })
+	fullName: string;
 
-  @Column({ name: 'especialidad' })
-  specialization: string;
+	@Column({ name: 'especialidad' })
+	specialization: string;
 
-  @OneToMany(() => EvaluationEntity, (evalEntity) => evalEntity.nutritionist)
-  evaluations: EvaluationEntity[];
+	@OneToMany(() => EvaluationEntity, (evalEntity) => evalEntity.nutritionist)
+	evaluations: EvaluationEntity[];
 
-  @OneToMany(
-    () => PatientAssignmentEntity,
-    (assignment) => assignment.nutritionist,
-  )
-  assignments: PatientAssignmentEntity[];
+	@OneToMany(
+		() => PatientAssignmentEntity,
+		(assignment) => assignment.nutritionist,
+	)
+	assignments: PatientAssignmentEntity[];
 }

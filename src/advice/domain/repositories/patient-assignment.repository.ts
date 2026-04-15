@@ -1,3 +1,3 @@
 export interface PatientAssignmentRepository {
-  save(obj: any): Promise<any>;
+	save(obj: any): Promise<any>;
 }

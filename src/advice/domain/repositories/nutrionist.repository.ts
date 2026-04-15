@@ -1,3 +1,3 @@
 export interface NutritionistRepository {
-  findById(nutritionistId: number): Promise<any>;
+	findById(nutritionistId: number): Promise<any>;
 }

@@ -21,202 +21,206 @@ import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-uni
  * - El nutricionista respeta el límite de evaluaciones diarias (máx 5 por día)
  */
 describe('Integration Test - Flujo 2: Crear Paciente + Añadir Evaluación', () => {
-  let createHandler: CreatePatientWithDiagnosisHandler;
-  let addEvaluationHandler: AddEvaluationPatientHandler;
-  let getHandler: GetPatientByIdHandler;
-  let patientRepository: PatientRepository;
-  let mockPatientRepo: any;
+	let createHandler: CreatePatientWithDiagnosisHandler;
+	let addEvaluationHandler: AddEvaluationPatientHandler;
+	let getHandler: GetPatientByIdHandler;
+	let patientRepository: PatientRepository;
+	let mockPatientRepo: any;
 
-  const createMockPatientEntity = () => {
-    const entity = new PatientEntity();
-    // entity.id = 1;
-    entity.fullName = 'Maria Garcia';
-    entity.lastName = 'Garcia';
-    entity.gender = 'F';
-    entity.identityCard = '87654321';
-    entity.cellPhone = '0999111111';
-    entity.latitude = -0.2;
-    entity.longitude = -78.5;
-    entity.evaluations = [];
-    return entity;
-  };
+	const createMockPatientEntity = () => {
+		const entity = new PatientEntity();
+		// entity.id = 1;
+		entity.fullName = 'Maria Garcia';
+		entity.lastName = 'Garcia';
+		entity.gender = 'F';
+		entity.identityCard = '87654321';
+		entity.cellPhone = '0999111111';
+		entity.latitude = -0.2;
+		entity.longitude = -78.5;
+		entity.evaluations = [];
+		return entity;
+	};
 
-  beforeEach(() => {
-    // Mock repositories
-    mockPatientRepo = {
-      save: jest.fn(() => Promise.resolve(createMockPatientEntity())),
-      findById: jest.fn(() => Promise.resolve(createMockPatientEntity())),
-      findAll: jest.fn(() => Promise.resolve([createMockPatientEntity()])),
-      findByIdentityCard: jest.fn().mockResolvedValue(null),
-    };
+	beforeEach(() => {
+		// Mock repositories
+		mockPatientRepo = {
+			save: jest.fn(() => Promise.resolve(createMockPatientEntity())),
+			findById: jest.fn(() => Promise.resolve(createMockPatientEntity())),
+			findAll: jest.fn(() =>
+				Promise.resolve([createMockPatientEntity()]),
+			),
+			findByIdentityCard: jest.fn().mockResolvedValue(null),
+		};
 
-    patientRepository = mockPatientRepo;
+		patientRepository = mockPatientRepo;
 
-    const uniquenessChecker = new PatientUniquenessChecker(mockPatientRepo);
+		const uniquenessChecker = new PatientUniquenessChecker(mockPatientRepo);
 
-    // Create handlers with mocked repositories
-    createHandler = new CreatePatientWithDiagnosisHandler(
-      patientRepository,
-      uniquenessChecker,
-      { connect: jest.fn() } as any,
-      { addEvent: jest.fn() } as any,
-    );
-    addEvaluationHandler = new AddEvaluationPatientHandler(patientRepository);
-    getHandler = new GetPatientByIdHandler(patientRepository);
-  });
+		// Create handlers with mocked repositories
+		createHandler = new CreatePatientWithDiagnosisHandler(
+			patientRepository,
+			uniquenessChecker,
+			{ connect: jest.fn() } as any,
+			{ addEvent: jest.fn() } as any,
+		);
+		addEvaluationHandler = new AddEvaluationPatientHandler(
+			patientRepository,
+		);
+		getHandler = new GetPatientByIdHandler(patientRepository);
+	});
 
-  it('Paso 1: Debe crear un paciente exitosamente', async () => {
-    const command = new CreatePatientWithDiagnosisCommand(
-      // 1,
-      'Maria Garcia',
-      'Garcia',
-      'F',
-      '87654321',
-      '0999111111',
-      { latitude: -0.2, longitude: -78.5 },
-      '1',
-      65,
-      1.65,
-      'Sobrepeso',
-    );
+	it('Paso 1: Debe crear un paciente exitosamente', async () => {
+		const command = new CreatePatientWithDiagnosisCommand(
+			// 1,
+			'Maria Garcia',
+			'Garcia',
+			'F',
+			'87654321',
+			'0999111111',
+			{ latitude: -0.2, longitude: -78.5 },
+			'1',
+			65,
+			1.65,
+			'Sobrepeso',
+		);
 
-    const result = await createHandler.execute(command);
+		const result = await createHandler.execute(command);
 
-    expect(result).toBeDefined();
-    expect(result.getFullName()).toBe('Maria Garcia');
-  });
+		expect(result).toBeDefined();
+		expect(result.getFullName()).toBe('Maria Garcia');
+	});
 
-  it('Paso 2: Debe añadir una evaluación al paciente creado', async () => {
-    const command = new AddEvaluationPatientCommand(
-      '1',
-      '1',
-      new Date(),
-      64,
-      1.65,
-      'Sobrepeso',
-      1,
-    );
+	it('Paso 2: Debe añadir una evaluación al paciente creado', async () => {
+		const command = new AddEvaluationPatientCommand(
+			'1',
+			'1',
+			new Date(),
+			64,
+			1.65,
+			'Sobrepeso',
+			1,
+		);
 
-    await addEvaluationHandler.execute(command);
+		await addEvaluationHandler.execute(command);
 
-    expect(mockPatientRepo.save).toHaveBeenCalled();
-  });
+		expect(mockPatientRepo.save).toHaveBeenCalled();
+	});
 
-  it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
-    const command = new AddEvaluationPatientCommand(
-      '1',
-      '2',
-      new Date(),
-      63,
-      1.65,
-      'Normal',
-      1,
-    );
+	it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
+		const command = new AddEvaluationPatientCommand(
+			'1',
+			'2',
+			new Date(),
+			63,
+			1.65,
+			'Normal',
+			1,
+		);
 
-    await addEvaluationHandler.execute(command);
+		await addEvaluationHandler.execute(command);
 
-    expect(mockPatientRepo.save).toHaveBeenCalled();
-  });
+		expect(mockPatientRepo.save).toHaveBeenCalled();
+	});
 
-  it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
-    const command = new AddEvaluationPatientCommand(
-      '1',
-      '2',
-      new Date(),
-      63,
-      1.65,
-      'Normal',
-      1,
-    );
+	it('Paso 3: Debe añadir una segunda evaluación al paciente', async () => {
+		const command = new AddEvaluationPatientCommand(
+			'1',
+			'2',
+			new Date(),
+			63,
+			1.65,
+			'Normal',
+			1,
+		);
 
-    await addEvaluationHandler.execute(command);
+		await addEvaluationHandler.execute(command);
 
-    expect(mockPatientRepo.save).toHaveBeenCalled();
-  });
+		expect(mockPatientRepo.save).toHaveBeenCalled();
+	});
 
-  it('Paso 4: Debe recuperar el paciente con sus evaluaciones', async () => {
-    // Primero crear paciente
-    const createCmd = new CreatePatientWithDiagnosisCommand(
-      // 1,
-      'Maria Garcia',
-      'Garcia',
-      'F',
-      '87654321',
-      '0999111111',
-      { latitude: -0.2, longitude: -78.5 },
-      '1',
-      65,
-      1.65,
-      'Sobrepeso',
-    );
+	it('Paso 4: Debe recuperar el paciente con sus evaluaciones', async () => {
+		// Primero crear paciente
+		const createCmd = new CreatePatientWithDiagnosisCommand(
+			// 1,
+			'Maria Garcia',
+			'Garcia',
+			'F',
+			'87654321',
+			'0999111111',
+			{ latitude: -0.2, longitude: -78.5 },
+			'1',
+			65,
+			1.65,
+			'Sobrepeso',
+		);
 
-    await createHandler.execute(createCmd);
+		await createHandler.execute(createCmd);
 
-    // Luego añadir evaluación
-    const evalCmd = new AddEvaluationPatientCommand(
-      '1',
-      '1',
-      new Date(),
-      64,
-      1.65,
-      'Sobrepeso',
-      1,
-    );
+		// Luego añadir evaluación
+		const evalCmd = new AddEvaluationPatientCommand(
+			'1',
+			'1',
+			new Date(),
+			64,
+			1.65,
+			'Sobrepeso',
+			1,
+		);
 
-    await addEvaluationHandler.execute(evalCmd);
+		await addEvaluationHandler.execute(evalCmd);
 
-    // Finalmente recuperar paciente
-    const query = new GetPatientByIdQuery('1');
-    const result = await getHandler.execute(query);
+		// Finalmente recuperar paciente
+		const query = new GetPatientByIdQuery('1');
+		const result = await getHandler.execute(query);
 
-    expect(result).toBeDefined();
-    expect(result.fullName).toBe('Maria Garcia');
-  });
+		expect(result).toBeDefined();
+		expect(result.fullName).toBe('Maria Garcia');
+	});
 
-  it('Paso 5: Debe soportar múltiples evaluaciones para el mismo paciente', async () => {
-    // Crear paciente
-    const createCmd = new CreatePatientWithDiagnosisCommand(
-      // 1,
-      'Maria Garcia',
-      'Garcia',
-      'F',
-      '87654321',
-      '0999111111',
-      { latitude: -0.2, longitude: -78.5 },
-      '1',
-      65,
-      1.65,
-      'Sobrepeso',
-    );
+	it('Paso 5: Debe soportar múltiples evaluaciones para el mismo paciente', async () => {
+		// Crear paciente
+		const createCmd = new CreatePatientWithDiagnosisCommand(
+			// 1,
+			'Maria Garcia',
+			'Garcia',
+			'F',
+			'87654321',
+			'0999111111',
+			{ latitude: -0.2, longitude: -78.5 },
+			'1',
+			65,
+			1.65,
+			'Sobrepeso',
+		);
 
-    await createHandler.execute(createCmd);
+		await createHandler.execute(createCmd);
 
-    // Primera evaluación
-    const evalCmd1 = new AddEvaluationPatientCommand(
-      '1',
-      '1',
-      new Date(),
-      64,
-      1.65,
-      'Sobrepeso',
-      1,
-    );
+		// Primera evaluación
+		const evalCmd1 = new AddEvaluationPatientCommand(
+			'1',
+			'1',
+			new Date(),
+			64,
+			1.65,
+			'Sobrepeso',
+			1,
+		);
 
-    await addEvaluationHandler.execute(evalCmd1);
+		await addEvaluationHandler.execute(evalCmd1);
 
-    // Segunda evaluación
-    const evalCmd2 = new AddEvaluationPatientCommand(
-      '1',
-      '2',
-      new Date(),
-      63,
-      1.65,
-      'Normal',
-      1,
-    );
+		// Segunda evaluación
+		const evalCmd2 = new AddEvaluationPatientCommand(
+			'1',
+			'2',
+			new Date(),
+			63,
+			1.65,
+			'Normal',
+			1,
+		);
 
-    await addEvaluationHandler.execute(evalCmd2);
+		await addEvaluationHandler.execute(evalCmd2);
 
-    expect(mockPatientRepo.save).toHaveBeenCalled();
-  });
+		expect(mockPatientRepo.save).toHaveBeenCalled();
+	});
 });

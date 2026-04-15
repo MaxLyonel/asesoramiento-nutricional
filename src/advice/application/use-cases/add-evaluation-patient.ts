@@ -9,50 +9,50 @@ import { PatientEntity } from 'src/advice/infrastructure/entities/patient.entity
 
 @Injectable()
 export class AddEvaluationUseCase {
-  constructor(
-    @Inject('PatientRepository')
-    private readonly patientRepo: PatientRepository,
-  ) {}
+	constructor(
+		@Inject('PatientRepository')
+		private readonly patientRepo: PatientRepository,
+	) {}
 
-  async execute(
-    patientId: string,
-    evaluationId: string,
-    date: Date,
-    weight: number,
-    height: number,
-    bodyComposition: string,
-    nutritionistId: number,
-  ) {
-    const patient = await this.patientRepo.findById(patientId);
-    const pa = PatientEntity.toDomain(patient);
-    if (!patient) throw new Error('Paciente no encontrado');
+	async execute(
+		patientId: string,
+		evaluationId: string,
+		date: Date,
+		weight: number,
+		height: number,
+		bodyComposition: string,
+		nutritionistId: number,
+	) {
+		const patient = await this.patientRepo.findById(patientId);
+		const pa = PatientEntity.toDomain(patient);
+		if (!patient) throw new Error('Paciente no encontrado');
 
-    const allPatients = await this.patientRepo.findAll(); // para validar límite
-    const all = allPatients.map(PatientEntity.toDomain);
+		const allPatients = await this.patientRepo.findAll(); // para validar límite
+		const all = allPatients.map(PatientEntity.toDomain);
 
-    // Lógica de dominio
-    EvaluationDomainService.ensureNutritionistLimit(
-      nutritionistId,
-      new Date(date),
-      all,
-    );
+		// Lógica de dominio
+		EvaluationDomainService.ensureNutritionistLimit(
+			nutritionistId,
+			new Date(date),
+			all,
+		);
 
-    // Crear evaluación y agregar al paciente
-    const evaluation = new Evaluation(
-      evaluationId,
-      date,
-      new Weight(weight),
-      new Height(height),
-      new BodyComposition(bodyComposition),
-      nutritionistId,
-    );
-    // const eva = EvaluationEntity.toDomain(evaluation)
-    // patient.addEvaluation(evaluation);
-    // console.log(pa.addEvaluation(evaluation))
-    pa.addEvaluation(evaluation);
+		// Crear evaluación y agregar al paciente
+		const evaluation = new Evaluation(
+			evaluationId,
+			date,
+			new Weight(weight),
+			new Height(height),
+			new BodyComposition(bodyComposition),
+			nutritionistId,
+		);
+		// const eva = EvaluationEntity.toDomain(evaluation)
+		// patient.addEvaluation(evaluation);
+		// console.log(pa.addEvaluation(evaluation))
+		pa.addEvaluation(evaluation);
 
-    // await this.patientRepo.save(patient);
-    console.log(patientId, weight, height, bodyComposition, nutritionistId);
-    await this.patientRepo.save(pa);
-  }
+		// await this.patientRepo.save(patient);
+		console.log(patientId, weight, height, bodyComposition, nutritionistId);
+		await this.patientRepo.save(pa);
+	}
 }

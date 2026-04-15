@@ -6,15 +6,15 @@ import { PatientAssignmentRepository } from 'src/advice/domain/repositories/pati
 
 @Injectable()
 export class PatientAssignmentRepositoryImpl
-  implements PatientAssignmentRepository
+	implements PatientAssignmentRepository
 {
-  constructor(
-    @InjectRepository(PatientAssignmentEntity)
-    private readonly patientAssignmentRepository: Repository<PatientAssignmentEntity>,
-  ) {}
+	constructor(
+		@InjectRepository(PatientAssignmentEntity)
+		private readonly patientAssignmentRepository: Repository<PatientAssignmentEntity>,
+	) {}
 
-  async save(obj: any): Promise<any> {
-    const patient = await this.patientAssignmentRepository.save(obj);
-    if (!patient) throw new Error('No se pudo crear la asignación');
-  }
+	async save(obj: any): Promise<any> {
+		const patient = await this.patientAssignmentRepository.save(obj);
+		if (!patient) throw new Error('No se pudo crear la asignación');
+	}
 }
