@@ -53,7 +53,7 @@ jobs:
               with:
                   projectBaseDir: .
                   args: >
-                      -Dsonar.organization=Asesoramiento-nutricional
+                      -Dsonar.organization=asesoramiento-nutricional
                       -Dsonar.projectKey=MaxLyonel_asesoramiento-nutricional
                       -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
               env:
