@@ -17,7 +17,7 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodeuser -u 1001
 
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 
 COPY --from=builder /app/dist ./dist
 
