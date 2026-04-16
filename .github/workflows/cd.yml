@@ -46,7 +46,11 @@ jobs:
                   script: |
                       cd /root/app/nutritional-advice-microservice
                       git pull origin main
-                      git clone https://github.com/NoeRous/api-gateway-nur-grupo1.git ./api-gateway-nur-grupo1 || (cd ./api-gateway-nur-grupo1 && git pull origin main)
+                      if [ -d ./api-gateway-nur-grupo1 ]; then
+                        cd ./api-gateway-nur-grupo1 && git pull origin main && cd ..
+                      else
+                        git clone https://github.com/NoeRous/api-gateway-nur-grupo1.git ./api-gateway-nur-grupo1
+                      fi
                       docker compose down
                       docker compose pull nutritional-advice
                       docker compose up -d --build api-gateway
