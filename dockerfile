@@ -3,7 +3,7 @@ WORKDIR /app
 
 COPY package*.json ./
 RUN apk add --no-cache python3 make g++
-RUN npm install --ignore-scripts
+RUN npm install
 
 COPY tsconfig*.json ./
 COPY src ./src
@@ -17,8 +17,7 @@ RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodeuser -u 1001
 
 COPY package*.json ./
-RUN apk add --no-cache python3 make g++
-RUN npm install --ignore-scripts --only=production
+RUN npm install --omit=dev
 
 COPY --from=builder /app/dist ./dist
 
