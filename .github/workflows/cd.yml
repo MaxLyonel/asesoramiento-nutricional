@@ -19,7 +19,7 @@ jobs:
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      cd app/nutritional-advice-microservice
+                      cd app/asesoramiento-nutricional
                       git pull origin main
                       docker build -t nutritional-advice:latest -f dockerfile .
                       docker stop nutritional-advice || true
