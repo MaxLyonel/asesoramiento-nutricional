@@ -1,100 +1,169 @@
 version: '3.9'
 
 services:
-    zookeeper:
-        image: confluentinc/cp-zookeeper:7.5.0
-        container_name: zookeeper
-        environment:
-            ZOOKEEPER_CLIENT_PORT: 2181
-            ZOOKEEPER_TICK_TIME: 2000
-        ports:
-            - '2181:2181'
+  # ----------------------
+  # Zookeeper
+  # ----------------------
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
 
-    kafka:
-        image: confluentinc/cp-kafka:7.5.0
-        container_name: kafka
-        depends_on:
-            - zookeeper
-        environment:
-            KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-            KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-        ports:
-            - '9092:9092'
+  # ----------------------
+  # Kafka Broker
+  # ----------------------
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
 
-    kafka-connect:
-        image: debezium/connect:2.2
-        platform: linux/amd64
-        container_name: kafka-connect
-        depends_on:
-            - kafka
-        environment:
-            BOOTSTRAP_SERVERS: kafka:9092
-            GROUP_ID: 'connect-cluster'
-            CONFIG_STORAGE_TOPIC: 'connect-configs'
-            OFFSET_STORAGE_TOPIC: 'connect-offsets'
-            STATUS_STORAGE_TOPIC: 'connect-status'
-            CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: 'false'
-            CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
-            CONNECT_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-            CONNECT_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-            CONNECT_INTERNAL_KEY_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-            CONNECT_INTERNAL_VALUE_CONVERTER: 'org.apache.kafka.connect.json.JsonConverter'
-            CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
-            CONNECT_PLUGIN_PATH: /kafka/connect
-        ports:
-            - '8083:8083'
+  # ----------------------
+  # Kafka Connect
+  # ----------------------
+  kafka-connect:
+    image: debezium/connect:2.2
+    platform: linux/amd64
+    container_name: kafka-connect
+    depends_on:
+      - kafka
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: "connect-cluster"
+      CONFIG_STORAGE_TOPIC: "connect-configs"
+      OFFSET_STORAGE_TOPIC: "connect-offsets"
+      STATUS_STORAGE_TOPIC: "connect-status"
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_PLUGIN_PATH: /kafka/connect
+    ports:
+      - "8083:8083"
 
-    postgres-api:
-        image: postgres:16-alpine
-        container_name: postgres-api
-        environment:
-            POSTGRES_USER: maxramirez
-            POSTGRES_PASSWORD: 22leorexx100
-            POSTGRES_DB: nutritional_advice
-        command: >
-            postgres -c wal_level=logical
-                     -c max_replication_slots=5
-                     -c max_wal_senders=5
-                     -c listen_addresses='*'
-        ports:
-            - '5433:5432'
-        volumes:
-            - pgdata_api:/var/lib/postgresql/data
+  # ----------------------
+  # API Gateway
+  # ----------------------
+  api-gateway:
+    build:
+      context: ./api-gateway-nur-grupo1
+    container_name: api-gateway
+    environment:
+      - KAFKA_BROKER=kafka:9092
+      - DATABASE_HOST=postgres-api
+      - DATABASE_PORT=5432
+      - DATABASE_USER=maxramirez
+      - DATABASE_PASSWORD=22leorexx100
+      - DATABASE_NAME=nutritional_advice
+    ports:
+      - "4000:4000"
+    depends_on:
+      - kafka
+      - postgres-api
 
-    postgres-nutritional:
-        image: postgres:16-alpine
-        container_name: postgres-nutritional
-        environment:
-            POSTGRES_USER: maxramirez
-            POSTGRES_PASSWORD: 22leorexx100
-            POSTGRES_DB: nutritional_advice
-        command: >
-            postgres -c wal_level=logical
-                     -c max_replication_slots=5
-                     -c max_wal_senders=5
-                     -c listen_addresses='*'
-        ports:
-            - '5434:5432'
-        volumes:
-            - pgdata_nutritional:/var/lib/postgresql/data
+  # ----------------------
+  # PostgreSQL API Gateway
+  # ----------------------
+  postgres-api:
+    image: postgres:16-alpine
+    container_name: postgres-api
+    environment:
+      POSTGRES_USER: maxramirez
+      POSTGRES_PASSWORD: 22leorexx100
+      POSTGRES_DB: nutritional_advice
+    command: >
+      postgres -c wal_level=logical
+               -c max_replication_slots=5
+               -c max_wal_senders=5
+               -c listen_addresses='*'
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_api:/var/lib/postgresql/data
 
-    nutritional-advice:
-        build:
-            context: .
-            dockerfile: dockerfile
-        container_name: nutritional-advice
-        env_file:
-            - .env
-        ports:
-            - '3000:3000'
-        depends_on:
-            - kafka
-            - postgres-nutritional
-        restart: unless-stopped
+  # ----------------------
+  # Nutritional Advice Microservice
+  # ----------------------
+  nutritional-advice:
+    build:
+      context: ./nutritional-advice-microservice
+    container_name: nutritional-advice
+    env_file:
+      - ./nutritional-advice-microservice/.env
+    ports:
+      - "3000:3000"
+    depends_on:
+      - kafka
+      - postgres-nutritional
+
+  # ----------------------
+  # PostgreSQL Nutritional Advice
+  # ----------------------
+  postgres-nutritional:
+    image: postgres:16-alpine
+    container_name: postgres-nutritional
+    environment:
+      POSTGRES_USER: maxramirez
+      POSTGRES_PASSWORD: 22leorexx100
+      POSTGRES_DB: nutritional_advice
+    command: >
+      postgres -c wal_level=logical
+               -c max_replication_slots=5
+               -c max_wal_senders=5
+               -c listen_addresses='*'
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_nutritional:/var/lib/postgresql/data
+
+  # ----------------------
+  # Delivery Microservice
+  # ----------------------
+#   delivery:
+#     build:
+#       context: ./delivery-microservice_nur
+#     container_name: delivery
+#     env_file:
+#       - ./delivery-microservice_nur/.env
+#     ports:
+#       - "3100:3000"
+#     depends_on:
+#       - kafka
+#       - postgres-delivery
+
+#   postgres-delivery:
+#     image: postgres:16-alpine
+#     container_name: postgres-delivery
+#     environment:
+#       POSTGRES_USER: maxramirez
+#       POSTGRES_PASSWORD: 22leorexx100
+#       POSTGRES_DB: delivery_db
+#     command: >
+#       postgres -c wal_level=logical
+#                -c max_replication_slots=5
+#                -c max_wal_senders=5
+#                -c listen_addresses='*'
+#     ports:
+#       - "5435:5432"
+#     volumes:
+#       - pgdata_delivery:/var/lib/postgresql/data
 
 volumes:
-    pgdata_api:
-    pgdata_nutritional:
+  pgdata_api:
+  pgdata_nutritional:
+#   pgdata_delivery:
