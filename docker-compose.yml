@@ -45,6 +45,23 @@ services:
         ports:
             - '8083:8083'
 
+    postgres-api:
+        image: postgres:16-alpine
+        container_name: postgres-api
+        environment:
+            POSTGRES_USER: maxramirez
+            POSTGRES_PASSWORD: 22leorexx100
+            POSTGRES_DB: nutritional_advice
+        command: >
+            postgres -c wal_level=logical
+                     -c max_replication_slots=5
+                     -c max_wal_senders=5
+                     -c listen_addresses='*'
+        ports:
+            - '5433:5432'
+        volumes:
+            - pgdata_api:/var/lib/postgresql/data
+
     postgres-nutritional:
         image: postgres:16-alpine
         container_name: postgres-nutritional
@@ -62,6 +79,23 @@ services:
         volumes:
             - pgdata_nutritional:/var/lib/postgresql/data
 
+    api-gateway:
+        build:
+            context: ./api-gateway-nur-grupo1
+        container_name: api-gateway
+        environment:
+            - KAFKA_BROKER=kafka:9092
+            - DATABASE_HOST=postgres-api
+            - DATABASE_PORT=5432
+            - DATABASE_USER=maxramirez
+            - DATABASE_PASSWORD=22leorexx100
+            - DATABASE_NAME=nutritional_advice
+        ports:
+            - '4000:4000'
+        depends_on:
+            - kafka
+            - postgres-api
+
     nutritional-advice:
         build:
             context: .
@@ -77,4 +111,5 @@ services:
         restart: unless-stopped
 
 volumes:
+    pgdata_api:
     pgdata_nutritional:
