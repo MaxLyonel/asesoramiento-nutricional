@@ -99,11 +99,7 @@ services:
             - postgres-api
 
     nutritional-advice:
-        build:
-            context: .
-            dockerfile: dockerfile
-            cache_from:
-                - nutritional-advice:latest
+        image: maxlyonel22/nutritional-advice:latest
         container_name: nutritional-advice
         env_file:
             - .env
