@@ -19,7 +19,7 @@ jobs:
                   username: ${{ secrets.SERVER_USER }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      cd /app/nutritional-advice-microservice
+                      cd /root/app/nutritional-advice-microservice
                       git pull origin main
                       git clone https://github.com/NoeRous/api-gateway-nur-grupo1.git ./api-gateway-nur-grupo1 || (cd ./api-gateway-nur-grupo1 && git pull origin main)
                       docker compose down
