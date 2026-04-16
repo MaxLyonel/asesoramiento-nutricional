@@ -12,6 +12,20 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v4
 
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '20'
+
+            - name: Cache npm dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+
+            - name: Install dependencies
+              run: npm ci
+
             - name: Deploy to server
               uses: appleboy/ssh-action@v1.0.3
               with:
@@ -22,5 +36,6 @@ jobs:
                       cd /root/app/nutritional-advice-microservice
                       git pull origin main
                       git clone https://github.com/NoeRous/api-gateway-nur-grupo1.git ./api-gateway-nur-grupo1 || (cd ./api-gateway-nur-grupo1 && git pull origin main)
+                      export DOCKER_BUILDKIT=1
                       docker compose down
                       docker compose up -d --build

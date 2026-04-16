@@ -82,6 +82,8 @@ services:
     api-gateway:
         build:
             context: ./api-gateway-nur-grupo1
+            cache_from:
+                - api-gateway:latest
         container_name: api-gateway
         environment:
             - KAFKA_BROKER=kafka:9092
@@ -100,6 +102,8 @@ services:
         build:
             context: .
             dockerfile: dockerfile
+            cache_from:
+                - nutritional-advice:latest
         container_name: nutritional-advice
         env_file:
             - .env
