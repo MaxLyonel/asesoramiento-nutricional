@@ -1,0 +1,33 @@
+services:
+    app:
+        build:
+            context: .
+            dockerfile: dockerfile
+        ports:
+            - '3000:3000'
+        env_file:
+            - .env
+        depends_on:
+            postgres:
+                condition: service_healthy
+        restart: unless-stopped
+
+    postgres:
+        image: postgres:16-alpine
+        environment:
+            POSTGRES_USER: maxramirez
+            POSTGRES_PASSWORD: 22leorexx100
+            POSTGRES_DB: nutritional_advice
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        ports:
+            - '5432:5432'
+        healthcheck:
+            test:
+                ['CMD-SHELL', 'pg_isready -U maxramirez -d nutritional_advice']
+            interval: 10s
+            timeout: 5s
+            retries: 5
+
+volumes:
+    postgres_data:
