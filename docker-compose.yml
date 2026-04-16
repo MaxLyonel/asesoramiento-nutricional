@@ -8,11 +8,10 @@ services:
         env_file:
             - .env
         depends_on:
-            postgres:
+            postgres-nutritional:
                 condition: service_healthy
-        restart: unless-stopped
 
-    postgres:
+    postgres-nutritional:
         image: postgres:16-alpine
         environment:
             POSTGRES_USER: maxramirez
