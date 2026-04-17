@@ -118,6 +118,19 @@ services:
                 condition: service_healthy
             postgres-api:
                 condition: service_started
+        healthcheck:
+            test:
+                [
+                    'CMD',
+                    'wget',
+                    '--spider',
+                    '-q',
+                    'http://localhost:4000/health',
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 20s
 
     nutritional-advice:
         image: maxlyonel22/nutritional-advice:latest
