@@ -25,7 +25,7 @@ docker inspect api-gateway --format='{{json .State.Health}}' | jq
 
 ### Requisitos del Api-Gateway
 
-El endpoint `/health` debe existir en api-gateway:
+El endpoint `/api/health` debe existir en api-gateway:
 
 ```typescript
 @Get('health')
