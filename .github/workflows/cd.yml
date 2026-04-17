@@ -53,5 +53,5 @@ jobs:
                       fi
                       docker compose down
                       docker compose pull nutritional-advice
-                      docker compose up -d --build api-gateway
-                      docker compose up -d nutritional-advice
+                      docker compose up -d
+                      docker compose ps
