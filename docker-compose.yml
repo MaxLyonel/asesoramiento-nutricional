@@ -98,6 +98,23 @@ services:
         volumes:
             - pgdata_nutritional:/var/lib/postgresql/data
 
+    postgres-auth:
+        image: postgres:16-alpine
+        container_name: postgres-auth
+        environment:
+            POSTGRES_USER: maxramirez
+            POSTGRES_PASSWORD: 22leorexx100
+            POSTGRES_DB: auth_service
+        command: >
+            postgres -c wal_level=logical
+                     -c max_replication_slots=5
+                     -c max_wal_senders=5
+                     -c listen_addresses='*'
+        ports:
+            - '5434:5432'
+        volumes:
+            - pgdata_auth:/var/lib/postgresql/data
+
     api-gateway:
         build:
             context: ./api-gateway-nur-grupo1
@@ -142,6 +159,17 @@ services:
         depends_on:
             - kafka
             - postgres-nutritional
+        restart: unless-stopped
+
+    auth-service:
+        image: maxlyonel22/auth-service:latest
+        container_name: auth-service
+        env_file:
+            - .env
+        ports:
+            - '3001:3000'
+        depends_on:
+            - postgres-auth
         restart: unless-stopped
 
 volumes:
