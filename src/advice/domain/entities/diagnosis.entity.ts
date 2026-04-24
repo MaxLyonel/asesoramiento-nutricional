@@ -8,10 +8,15 @@ export class Diagnosis {
 		private readonly weight: Weight,
 		private readonly height: Height,
 		private readonly bodyComposition: BodyComposition,
+		private readonly objective: string,
 		private observations?: string,
 	) {}
 
 	updateObservations(obs: string) {
 		this.observations = obs;
+	}
+
+	getObjective(): string {
+		return this.objective;
 	}
 }

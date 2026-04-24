@@ -8,14 +8,14 @@ async function bootstrap() {
 		transport: Transport.KAFKA,
 		options: {
 			client: {
-				brokers: ['kafka:9092'],
+				brokers: [process.env.KAFKA_BROKER],
 			},
 			consumer: {
 				groupId: 'nutritional-advice-consumer',
 				retry: {
-					retries: 10,
-					initialRetryTime: 3000,
-				},
+					retries: parseInt(process.env.KAFKA_RETRIES || '10', 10),
+					initialRetryTime: parseInt(process.env.KAFKA_RETRY_TIME || '3000', 10),
+				}
 			},
 		},
 	});

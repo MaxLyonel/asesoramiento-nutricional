@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { Patient } from 'src/advice/domain/entities/patient.entity';
 import { Diagnosis } from 'src/advice/domain/entities/diagnosis.entity';
-import { CreatePatientWithDiagnosisCommand } from './create-patient-width-diagnosis.command';
+import { UpdatePatientCommand } from './update-patient.command';
 import type { PatientRepository } from 'src/advice/domain/repositories/patient.repository';
 import { Gender } from 'src/advice/domain/value-objects/gender.vo';
 import { IdentityCard } from 'src/advice/domain/value-objects/identity-card.vo';
@@ -10,31 +10,22 @@ import { Location } from 'src/advice/domain/value-objects/location.vo';
 import { Weight } from 'src/advice/domain/value-objects/weight.vo';
 import { Height } from 'src/advice/domain/value-objects/height.vo';
 import { BodyComposition } from 'src/advice/domain/value-objects/body-composition.vo';
-import { Inject, OnModuleInit } from '@nestjs/common';
-import { PatientUniquenessChecker } from 'src/advice/domain/services/patient-unique.service';
-import { ClientKafka } from '@nestjs/microservices';
+import { Inject } from '@nestjs/common';
 import { OutboxService } from 'src/advice/infrastructure/services/outbox.service';
 
-@CommandHandler(CreatePatientWithDiagnosisCommand)
-export class CreatePatientWithDiagnosisHandler
-	implements ICommandHandler<CreatePatientWithDiagnosisCommand>, OnModuleInit
+@CommandHandler(UpdatePatientCommand)
+export class UpdatePatientHandler
+	implements ICommandHandler<UpdatePatientCommand>
 {
 	constructor(
 		@Inject('PatientRepository')
 		private readonly patientRepo: PatientRepository,
-		private readonly uniquenessChecker: PatientUniquenessChecker,
-		@Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
 		private readonly outboxService: OutboxService,
 	) {}
 
-	async onModuleInit() {
-		await this.kafkaClient.connect();
-	}
-
-	async execute(
-		command: CreatePatientWithDiagnosisCommand,
-	): Promise<Patient> {
+	async execute(command: UpdatePatientCommand): Promise<any> {
 		const {
+			id,
 			fullName,
 			lastName,
 			gender,
@@ -47,9 +38,6 @@ export class CreatePatientWithDiagnosisHandler
 			objective,
 		} = command;
 
-		await this.uniquenessChecker.ensureUnique(
-			new IdentityCard(identityCard),
-		);
 		const patient = new Patient(
 			fullName,
 			lastName,
@@ -60,7 +48,6 @@ export class CreatePatientWithDiagnosisHandler
 		);
 
 		const diag = new Diagnosis(
-			// diagnosisId,
 			new Weight(weight),
 			new Height(height),
 			new BodyComposition(bodyComposition),
@@ -69,14 +56,15 @@ export class CreatePatientWithDiagnosisHandler
 
 		patient.setInitialDiagnosis(diag);
 
-		const newPatient: any = await this.patientRepo.save(patient);
-		// ✅ En vez de emitir Kafka directamente:
+		const updated: any = await this.patientRepo.update(patient, id);
+
 		await this.outboxService.addEvent({
-			aggregateType: 'Advice', // nombre que usa tu EventRouter
-			aggregateId: newPatient.id,
-			type: 'PatientCreated',
-			payload: newPatient,
+			aggregateType: 'Advice',
+			aggregateId: id,
+			type: 'PatientUpdated',
+			payload: updated,
 		});
+
 		return patient;
 	}
 }

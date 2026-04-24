@@ -19,6 +19,9 @@ export class DiagnosisEntity {
 	@Column({ name: 'composicion_corporal' })
 	bodyComposition: string;
 
+	@Column({ name: 'objetivo' })
+	objective: string;
+
 	// Relación inversa
 	@OneToOne(() => PatientEntity, (patient) => patient.diagnosis)
 	patient: PatientEntity;
@@ -29,6 +32,7 @@ export class DiagnosisEntity {
 			new Weight(Number(entity.weight)), // convertir decimal a number
 			new Height(Number(entity.height)),
 			new BodyComposition(entity.bodyComposition),
+			entity.objective,
 		);
 	}
 
@@ -38,6 +42,7 @@ export class DiagnosisEntity {
 		entity.weight = diagnosis['weight']?.getValue() ?? 0;
 		entity.height = diagnosis['height']?.getValue() ?? 0;
 		entity.bodyComposition = diagnosis['bodyComposition']?.getValue() ?? '';
+		entity.objective = diagnosis.getObjective() ?? '';
 		// entity.observations = diagnosis['observations'] ?? null;
 		return entity;
 	}

@@ -2,11 +2,14 @@ import { Module } from '@nestjs/common';
 import { PatientRepositoryImpl } from './infrastructure/repositories/patient.repository.impl';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PatientEntity } from './infrastructure/entities/patient.entity';
+import { DiagnosisEntity } from './infrastructure/entities/diagnosis.entity';
 import { PatientController } from './presentation/controllers/patient.controller';
 // import { CreatePatientWithDiagnosis } from './application/use-cases/create-patient-with-diagnosis';
 // import { AddEvaluationUseCase } from './application/use-cases/add-evaluation-patient';
 import { CreatePatientWithDiagnosisHandler } from './application/commands/create-patient-width-diagnosis.handler';
 import { AddEvaluationPatientHandler } from './application/commands/add-evaluation-patient.handler';
+import { UpdatePatientHandler } from './application/commands/update-patient.handler';
+import { DeletePatientHandler } from './application/commands/delete-patient.handler';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GetAllPatientsHandler } from './application/queries/get-all-patients.handler';
 import { GetPatientByIdHandler } from './application/queries/get-patient-by-id.handler';
@@ -22,6 +25,8 @@ import { OutboxModule } from './infrastructure/services/outbox.module';
 const CommandHandlers = [
 	CreatePatientWithDiagnosisHandler,
 	AddEvaluationPatientHandler,
+	UpdatePatientHandler,
+	DeletePatientHandler,
 ];
 
 const QueryHandlers = [GetAllPatientsHandler, GetPatientByIdHandler];
@@ -33,6 +38,7 @@ const QueryHandlers = [GetAllPatientsHandler, GetPatientByIdHandler];
 		OutboxModule,
 		TypeOrmModule.forFeature([
 			PatientEntity,
+			DiagnosisEntity,
 			NutritionistEntity,
 			PatientAssignmentEntity,
 		]),
@@ -42,13 +48,13 @@ const QueryHandlers = [GetAllPatientsHandler, GetPatientByIdHandler];
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						brokers: ['kafka:9092'],
+						brokers: [process.env.KAFKA_BROKER || 'localhost:29092'],
 					},
 					consumer: {
-						groupId: 'nutritional-advice-consumer',
+						groupId: 'nutritional-advice-producer',
 						retry: {
-							retries: 10,
-							initialRetryTime: 3000,
+							retries: parseInt(process.env.KAFKA_RETRIES || '5', 10),
+							initialRetryTime: parseInt(process.env.KAFKA_RETRY_TIME || '300', 10),
 						},
 					},
 				},

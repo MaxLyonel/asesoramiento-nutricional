@@ -5,4 +5,6 @@ export interface PatientRepository {
 	findById(patientId: string): Promise<any>;
 	findAll(): Promise<any>;
 	findByIdentityCard(identityCard: any): Promise<any>;
+	update(patient: Patient, id: string): Promise<any>;
+	delete(patientId: string): Promise<void>;
 }

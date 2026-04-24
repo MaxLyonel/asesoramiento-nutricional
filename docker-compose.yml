@@ -117,9 +117,8 @@ services:
 
     api-gateway:
         build:
-            context: ./api-gateway-nur-grupo1
-            cache_from:
-                - api-gateway:latest
+            context: ./api-gateway
+            dockerfile: dockerfile.dev
         container_name: api-gateway
         environment:
             - KAFKA_BROKER=kafka:9092

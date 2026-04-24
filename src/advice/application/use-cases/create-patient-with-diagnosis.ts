@@ -28,11 +28,13 @@ export class CreatePatientWithDiagnosis {
 		weight: number,
 		height: number,
 		bodyComposition: string,
+		objective: string,
 	): Promise<Patient> {
 		const diag = new Diagnosis(
 			new Weight(weight),
 			new Height(height),
 			new BodyComposition(bodyComposition),
+			objective,
 		);
 		const patient = new Patient(
 			fullName,
