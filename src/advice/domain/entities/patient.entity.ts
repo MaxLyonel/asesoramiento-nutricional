@@ -9,16 +9,19 @@ import { Evaluation } from './evaluation.entity';
 export class Patient {
 	public diagnosis?: Diagnosis; // composicion
 	public evaluations: Evaluation[] = [];
+	public readonly id: string;
 
 	constructor(
-		// public readonly id: number,
 		public readonly fullName: string,
 		public readonly lastName: string,
 		public readonly gender: Gender,
 		public readonly identityCard: IdentityCard,
 		public readonly cellPhone: CellPhone,
 		public readonly location: Location,
-	) {}
+		id?: string,
+	) {
+		this.id = id ?? crypto.randomUUID();
+	}
 
 	// R1: No duplicar paciente
 	static ensureNotDuplicate(
@@ -68,6 +71,23 @@ export class Patient {
 
 	getFullName(): string {
 		return this.fullName;
+	}
+	getId(): string {
+		return this.id;
+	}
+
+	toJSON() {
+		return {
+			id: this.id,
+			fullName: this.fullName,
+			lastName: this.lastName,
+			gender: this.gender,
+			identityCard: this.identityCard,
+			cellPhone: this.cellPhone,
+			location: this.location,
+			diagnosis: this.diagnosis,
+			evaluations: this.evaluations,
+		};
 	}
 	getLastName(): string {
 		return this.lastName;

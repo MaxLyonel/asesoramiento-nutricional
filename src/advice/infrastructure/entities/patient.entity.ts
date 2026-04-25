@@ -59,13 +59,13 @@ export class PatientEntity {
 	// --- toDomain ---
 	static toDomain(entity: PatientEntity): Patient {
 		const patient = new Patient(
-			// entity.id,
 			entity.fullName,
 			entity.lastName,
 			new Gender(entity.gender as 'M' | 'F'),
 			new IdentityCard(entity.identityCard),
 			new CellPhone(entity.cellPhone),
 			new Location(entity.latitude, entity.longitude),
+			entity.id,
 		);
 
 		// Diagnóstico (si existe)

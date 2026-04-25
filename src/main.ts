@@ -14,8 +14,11 @@ async function bootstrap() {
 				groupId: 'nutritional-advice-consumer',
 				retry: {
 					retries: parseInt(process.env.KAFKA_RETRIES || '10', 10),
-					initialRetryTime: parseInt(process.env.KAFKA_RETRY_TIME || '3000', 10),
-				}
+					initialRetryTime: parseInt(
+						process.env.KAFKA_RETRY_TIME || '3000',
+						10,
+					),
+				},
 			},
 		},
 	});

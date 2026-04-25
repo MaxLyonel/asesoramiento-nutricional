@@ -48,13 +48,21 @@ const QueryHandlers = [GetAllPatientsHandler, GetPatientByIdHandler];
 				transport: Transport.KAFKA,
 				options: {
 					client: {
-						brokers: [process.env.KAFKA_BROKER || 'localhost:29092'],
+						brokers: [
+							process.env.KAFKA_BROKER || 'localhost:29092',
+						],
 					},
 					consumer: {
 						groupId: 'nutritional-advice-producer',
 						retry: {
-							retries: parseInt(process.env.KAFKA_RETRIES || '5', 10),
-							initialRetryTime: parseInt(process.env.KAFKA_RETRY_TIME || '300', 10),
+							retries: parseInt(
+								process.env.KAFKA_RETRIES || '5',
+								10,
+							),
+							initialRetryTime: parseInt(
+								process.env.KAFKA_RETRY_TIME || '300',
+								10,
+							),
 						},
 					},
 				},
